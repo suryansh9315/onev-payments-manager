@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import React from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const OtpScreen = () => {
   return (
-    <View>
+    <SafeAreaView>
       <Text>OtpScreen</Text>
-    </View>
+    </SafeAreaView>
   )
 }
 

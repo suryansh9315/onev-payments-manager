@@ -4,25 +4,57 @@ const client = require("twilio")(
   process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN
 );
-const { sign_jwt } = require('../../utils/jwt_helpers')
-const auth = require("../../middlewares/auth");
-
+const { sign_jwt } = require("../../utils/jwt_helpers");
+const { verifyToken, verifyManager } = require("../../middlewares/auth");
+const { mongoClient } = require("../../database");
+const database = mongoClient.db("onev");
+const drivers = database.collection("drivers");
+const managers = database.collection("managers");
 const app = express.Router();
-
-const verifications = client.verify.v2.services(process.env.TWILIO_SERVICE_SID).verifications;
-const verificationsChecks = client.verify.v2.services(process.env.TWILIO_SERVICE_SID).verificationChecks;
+const verifications = client.verify.v2.services(
+  process.env.TWILIO_SERVICE_SID
+).verifications;
+const verificationsChecks = client.verify.v2.services(
+  process.env.TWILIO_SERVICE_SID
+).verificationChecks;
 
 app.post("/login", async (req, res) => {
   // Validate User Input
-  if (!req.body.number) {
-    res
+  if (
+    !req.body.number ||
+    req.body.number.length != 14 ||
+    req.body.isManager == null
+  ) {
+    return res
       .status(400)
       .json({ status: "error", message: "Missing fields for login..." });
-    return;
   }
-  const number = req.body.number;
-  // Send O.T.P
   try {
+    const isManager = req.body.isManager;
+    const number = req.body.number;
+    const query = { number: number };
+    if (isManager) {
+      // Find Manager in Database
+      await mongoClient.connect();
+      const manager = await managers.findOne(query);
+      await mongoClient.close();
+      if (!manager) {
+        return res
+          .status(400)
+          .json({ status: "error", message: "Manager does not exist." });
+      }
+    } else {
+      // Find Driver in Database
+      await mongoClient.connect();
+      const driver = await drivers.findOne(query);
+      await mongoClient.close();
+      if (!driver) {
+        return res
+          .status(400)
+          .json({ status: "error", message: "Driver does not exist." });
+      }
+    }
+    // Send O.T.P
     const new_verification = await verifications.create({
       to: number,
       channel: "sms",
@@ -32,21 +64,29 @@ app.post("/login", async (req, res) => {
       message: "O.T.P sent to the number provided.",
     });
   } catch (error) {
-    res.status(400).json({ status: "error", error: error });
+    res.status(400).json({ status: "error", message: "error" });
   }
 });
 
-app.post("/verify", async (req, res) => {
+app.post("/verifyOtp", async (req, res) => {
   // Validate User Input
-  if (!req.body.otp || !req.body.number) {
+  if (
+    !req.body.otp ||
+    !req.body.number ||
+    req.body.number.length != 14 ||
+    req.body.otp.length != 6 ||
+    req.body.isManager == null
+  ) {
     res
       .status(400)
       .json({ status: "error", message: "Missing fields for login..." });
     return;
   }
-  const otp = req.body.otp;
-  const number = req.body.number;
   try {
+    const otp = req.body.otp;
+    const number = req.body.number;
+    const isManager = req.body.isManager;
+    const query = { number: number };
     // Verify O.T.P
     const new_verificationCheck = await verificationsChecks.create({
       to: number,
@@ -55,29 +95,80 @@ app.post("/verify", async (req, res) => {
     if (new_verificationCheck.status != "approved") {
       return res.status(400).json({ status: "error", message: "Wrong O.T.P" });
     }
-    // Create a user in our database if it doesn't exist
-    // Create a signed JWT token
-    const token = sign_jwt({ number })
-    // Return user info with signed jwt token
+    let user;
+    if (isManager) {
+      // Find Manager in Database
+      await mongoClient.connect();
+      const manager = await managers.findOne(query);
+      await mongoClient.close();
+      if (!manager) {
+        return res
+          .status(400)
+          .json({ status: "error", message: "Manager does not exist." });
+      }
+      user = manager
+    } else {
+      // Find Driver in Database
+      await mongoClient.connect();
+      const driver = await drivers.findOne(query);
+      await mongoClient.close();
+      if (!driver) {
+        return res
+        .status(400)
+        .json({ status: "error", message: "Driver does not exist." });
+      }
+      user = driver
+    }
+    // Return JWT Token with user data
+    const token = sign_jwt({ id: user._id });
     res.status(200).json({
       status: "sucess",
       message: "Phone number verified...",
-      token
+      token,
+      user
     });
   } catch (error) {
-    res.status(400).json({ status: "error", error: error });
+    res.status(400).json({ status: "error", message: "err", error });
   }
 });
 
-app.post("/update", auth, async (req, res) => {
+app.post("/updateDriver", verifyToken, async (req, res) => {
   // User object = req.user
   // Validate User Input
   // Update User Info in Database
   // Return user info (updated)
   res.status(200).json({
-    status: "sucess",
+    status: "success",
     message: "Profile Updated...",
-    number: req.user.number
+    number: req.number,
+  });
+});
+
+app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
+  // Validate User Input
+  if (!req.body.number || req.body.number.length != 14) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "Missing fields for creating..." });
+  }
+  const number = req.body.number;
+  const query = { number: number }
+  const driverObject = {
+    number: number,
+  };
+  await mongoClient.connect();
+  const oldDriver = await drivers.findOne(query)
+  if (oldDriver) {
+    return res.status(400).json({
+      status: "failure",
+      message: "Driver already exists.",
+    });
+  }
+  const newDriver = await drivers.insertOne(driverObject);
+  await mongoClient.close();
+  res.status(200).json({
+    status: "success",
+    message: "Driver created.",
   });
 });
 

@@ -24,10 +24,8 @@ const verifyToken = (req, res, next) => {
 
 const verifyManager = async (req, res, next) => {
   const userId = req.userId;
-  await mongoClient.connect()
   const query = { _id: new ObjectId(userId) };
   const manager = await managers.findOne(query);
-  await mongoClient.close()
   if (!manager) {
     return res
       .status(400)

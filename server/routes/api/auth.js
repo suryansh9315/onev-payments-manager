@@ -7,6 +7,7 @@ const client = require("twilio")(
 const { sign_jwt } = require("../../utils/jwt_helpers");
 const { verifyToken, verifyManager } = require("../../middlewares/auth");
 const { mongoClient } = require("../../database");
+
 const database = mongoClient.db("onev");
 const drivers = database.collection("drivers");
 const managers = database.collection("managers");
@@ -35,9 +36,7 @@ app.post("/login", async (req, res) => {
     const query = { number: number };
     if (isManager) {
       // Find Manager in Database
-      await mongoClient.connect();
       const manager = await managers.findOne(query);
-      await mongoClient.close();
       if (!manager) {
         return res
           .status(400)
@@ -45,9 +44,7 @@ app.post("/login", async (req, res) => {
       }
     } else {
       // Find Driver in Database
-      await mongoClient.connect();
       const driver = await drivers.findOne(query);
-      await mongoClient.close();
       if (!driver) {
         return res
           .status(400)
@@ -98,9 +95,7 @@ app.post("/verifyOtp", async (req, res) => {
     let user;
     if (isManager) {
       // Find Manager in Database
-      await mongoClient.connect();
       const manager = await managers.findOne(query);
-      await mongoClient.close();
       if (!manager) {
         return res
           .status(400)
@@ -109,9 +104,7 @@ app.post("/verifyOtp", async (req, res) => {
       user = manager
     } else {
       // Find Driver in Database
-      await mongoClient.connect();
       const driver = await drivers.findOne(query);
-      await mongoClient.close();
       if (!driver) {
         return res
         .status(400)
@@ -145,18 +138,15 @@ app.post("/updateDriver", verifyToken, async (req, res) => {
 });
 
 app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
+  console.log(req)
   // Validate User Input
-  if (!req.body.number || req.body.number.length != 14) {
+  if (!req.body.driver.number || req.body.driver.number.length != 14) {
     return res
       .status(400)
       .json({ status: "error", message: "Missing fields for creating..." });
   }
-  const number = req.body.number;
+  const number = req.body.driver.number;
   const query = { number: number }
-  const driverObject = {
-    number: number,
-  };
-  await mongoClient.connect();
   const oldDriver = await drivers.findOne(query)
   if (oldDriver) {
     return res.status(400).json({
@@ -164,11 +154,14 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
       message: "Driver already exists.",
     });
   }
+  const driverObject = {
+    number: number,
+  };
   const newDriver = await drivers.insertOne(driverObject);
-  await mongoClient.close();
   res.status(200).json({
     status: "success",
     message: "Driver created.",
+    driverObject
   });
 });
 

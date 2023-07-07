@@ -9,7 +9,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     const func = async () => {
-      const res = await fetch('http://192.168.1.3:5000/')
+      const res = await fetch('http://192.168.29.234:5000/')
       const message = await res.json()
       console.log(message)
     }

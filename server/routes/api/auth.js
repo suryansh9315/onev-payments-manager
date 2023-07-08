@@ -71,7 +71,7 @@ app.post("/verifyOtp", async (req, res) => {
     !req.body.otp ||
     !req.body.number ||
     req.body.number.length != 14 ||
-    req.body.otp.length != 6 ||
+    req.body.otp.length != 4 ||
     req.body.isManager == null
   ) {
     res
@@ -115,7 +115,7 @@ app.post("/verifyOtp", async (req, res) => {
     // Return JWT Token with user data
     const token = sign_jwt({ id: user._id });
     res.status(200).json({
-      status: "sucess",
+      status: "success",
       message: "Phone number verified...",
       token,
       user

@@ -21,11 +21,33 @@ const LoginScreen = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
 
-  useEffect(() => {
-    const func = async () => {
-      const res = await fetch('http://192.168.1.3:5000/')
-      const message = await res.json()
-      console.log(message)
+  const requestOtp = async () => {
+    try {
+      console.log(phone, value, isAdmin);
+      const response = await fetch(
+        `http://192.168.97.110:5000/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            number: "+91 " + phone,
+            isManager: isAdmin,
+          }),
+        }
+      );
+      const json = await response.json();
+      console.log(json);
+      if (response.status === 200) {
+        navigation.navigate("Otp");
+      } else {
+        alert("Something went wrong...");
+      }
+    } catch (error) {
+      alert("Something went wrong...");
+      console.error(error);
     }
   };
 

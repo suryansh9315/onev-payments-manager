@@ -26,7 +26,6 @@ const OtpScreen = ({ navigation }) => {
 
   const handleOTPSubmit = async () => {
     try {
-      console.log(phone, value, isAdmin)
       const response = await fetch(
         `http://192.168.97.110:5000/api/auth/verifyOtp`,
         {

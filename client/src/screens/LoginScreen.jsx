@@ -13,16 +13,57 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { CheckBox } from "react-native-elements";
 import { useRecoilState } from "recoil";
-import { admin, number } from "../atoms/User";
+import { admin, number, sessionToken } from "../atoms/User";
+import Loader from "../components/Loader";
+import { useEffect, useState } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+SplashScreen.preventAutoHideAsync();
 
 const height = Dimensions.get("window").height;
 
 const LoginScreen = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
+  const [token, setToken] = useRecoilState(sessionToken);
+  const [loading, setLoading] = useState(false);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("user_info");
+      if (jsonValue !== null) {
+        const user_info = JSON.parse(jsonValue);
+        setToken(user_info.token);
+        setIsAdmin(user_info.isAdmin);
+        setPhone(user_info.phone);
+        navigation.navigate("Home");
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      await SplashScreen.hideAsync();
+    }
+  };
+
+  const clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      await SplashScreen.hideAsync();
+    }
+  };
+
+  useEffect(() => {
+    getData();
+    // clearAll()
+  }, []);
 
   const requestOtp = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
         `http://192.168.97.110:5000/api/auth/login`,
         {
@@ -41,7 +82,9 @@ const LoginScreen = ({ navigation }) => {
       console.log(json);
       if (response.status === 200) {
         navigation.navigate("Otp");
+        setLoading(false);
       } else {
+        setLoading(false);
         alert("Something went wrong...");
       }
     } catch (error) {
@@ -49,6 +92,10 @@ const LoginScreen = ({ navigation }) => {
       console.error(error);
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { admin, number, sessionToken } from "../atoms/User";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Loader from "../components/Loader";
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CELL_COUNT = 4;
 
@@ -18,14 +20,29 @@ const OtpScreen = ({ navigation }) => {
   const phone = useRecoilValue(number);
   const [token, setToken] = useRecoilState(sessionToken);
   const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false)
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
 
+  const storeData = async (token) => {
+    try {
+      const object = {
+        isAdmin, phone, token
+      }
+      const jsonValue = JSON.stringify(object);
+      await AsyncStorage.setItem('user_info', jsonValue);
+      console.log("User stored in Async Storage.")
+    } catch (e) {
+      console.log("Async Storage not working.")
+    }
+  };
+
   const handleOTPSubmit = async () => {
     try {
+      setLoading(true)
       const response = await fetch(
         `http://192.168.97.110:5000/api/auth/verifyOtp`,
         {
@@ -44,9 +61,12 @@ const OtpScreen = ({ navigation }) => {
       const json = await response.json();
       console.log(json)
       if (response.status === 200) {
-        setToken(json?.token);
+        setToken(json.token);
+        storeData(json.token)
+        setLoading(false)
         navigation.navigate("Home");
       } else {
+        setLoading(false)
         alert("Something went wrong...");
       }
     } catch (error) {
@@ -56,6 +76,10 @@ const OtpScreen = ({ navigation }) => {
       setValue("");
     }
   };
+
+  if (loading) {
+    return <Loader />
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

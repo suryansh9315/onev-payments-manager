@@ -1,9 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./src/screens/HomeScreen";
-import LoginScreen from "./src/screens/LoginScreen";
-import OtpScreen from "./src/screens/OtpScreen";
-import { sessionToken } from "./src/atoms/User";
+import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
+import OtpScreen from "../screens/OtpScreen";
+import { sessionToken } from "../atoms/User";
 import { useRecoilValue } from "recoil";
+import BottomNavigator from "./BottomNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +17,7 @@ const RootNavigator = () => {
         <>
           <Stack.Screen
             name="Home"
-            component={HomeScreen}
+            component={BottomNavigator}
             options={{ headerShown: false }}
           />
         </>

@@ -37,7 +37,6 @@ const LoginScreen = ({ navigation }) => {
         setToken(user_info.token);
         setIsAdmin(user_info.isAdmin);
         setPhone(user_info.phone);
-        navigation.navigate("Home");
       }
     } catch (e) {
       console.log(e);

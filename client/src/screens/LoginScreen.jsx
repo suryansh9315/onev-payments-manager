@@ -87,6 +87,7 @@ const LoginScreen = ({ navigation }) => {
         alert("Something went wrong...");
       }
     } catch (error) {
+      setLoading(false);
       alert("Something went wrong...");
       console.error(error);
     }

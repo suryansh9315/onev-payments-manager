@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
-import { CheckBox } from "react-native-elements";
+import { CheckBox } from '@rneui/themed';
 import { useRecoilState } from "recoil";
 import { admin, number, sessionToken } from "../atoms/User";
 import Loader from "../components/Loader";
@@ -64,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://192.168.97.110:5000/api/auth/login`,
+        `http://192.168.1.6:5000/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -160,6 +160,9 @@ const LoginScreen = ({ navigation }) => {
                   borderWidth: 0,
                   padding: 0,
                   margin: 0,
+                  backgroundColor: '#114084',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
                 size={22}
                 checkedColor="#53ed58"

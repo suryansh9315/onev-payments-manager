@@ -64,7 +64,6 @@ const OtpScreen = ({ navigation }) => {
         setToken(json.token);
         storeData(json.token)
         setLoading(false)
-        navigation.navigate("Home");
       } else {
         setLoading(false)
         alert("Something went wrong...");

@@ -12,6 +12,7 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '@env'
 
 const CELL_COUNT = 4;
 
@@ -46,7 +47,7 @@ const OtpScreen = ({ navigation }) => {
     try {
       setLoading(true)
       const response = await fetch(
-        `http://192.168.1.9:5000/api/auth/verifyOtp`,
+        `${API_URL}/api/auth/verifyOtp`,
         {
           method: "POST",
           headers: {

@@ -10,6 +10,7 @@ import { Icon, Input } from "@rneui/themed";
 import FilterAccordion from "../components/FilterAccordion";
 import SortAccordion from "../components/SortAccordion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from '@env'
 
 const DriversScreen = () => {
   const isFocused = useIsFocused();
@@ -43,7 +44,7 @@ const DriversScreen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://192.168.1.9:5000/api/auth/getAllDrivers`,
+        `${API_URL}/api/auth/getAllDrivers`,
         {
           method: "POST",
           headers: {

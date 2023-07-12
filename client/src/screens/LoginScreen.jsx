@@ -18,6 +18,7 @@ import Loader from "../components/Loader";
 import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from '@env' 
 
 SplashScreen.preventAutoHideAsync();
 
@@ -52,7 +53,7 @@ const LoginScreen = ({ navigation }) => {
       if (jsonValue !== null) {
         const user_info = JSON.parse(jsonValue);
         const response = await fetch(
-          `http://192.168.1.9:5000/api/auth/checkToken`,
+          `${API_URL}/api/auth/checkToken`,
           {
             method: "POST",
             headers: {
@@ -102,7 +103,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://192.168.1.9:5000/api/auth/login`,
+        `${API_URL}/api/auth/login`,
         {
           method: "POST",
           headers: {

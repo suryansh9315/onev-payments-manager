@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ListItem, Icon } from "@rneui/themed";
 import { sessionToken } from "../atoms/User";
 import { useRecoilValue } from "recoil";
+import { API_URL } from '@env'
 
 const DriverAccordion = ({ driver, logout, setReload, reload }) => {
   const [expanded, setExpanded] = useState(false);
@@ -11,7 +12,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
   const handlePaymentUpdate = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.9:5000/api/auth/updatePayStatus`,
+        `${API_URL}/api/auth/updatePayStatus`,
         {
           method: "POST",
           headers: {

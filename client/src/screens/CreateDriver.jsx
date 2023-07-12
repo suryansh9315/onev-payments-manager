@@ -16,6 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../firebaseConfig";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Loader from "../components/Loader";
+import { API_URL } from '@env'
 
 const CreateDriver = () => {
   const [loading, setLoading] = useState(false);
@@ -82,7 +83,7 @@ const CreateDriver = () => {
     try {
       setLoading(true);
       const isTokenValid = await fetch(
-        `http://192.168.1.9:5000/api/auth/getDriver`,
+        `${API_URL}/api/auth/getDriver`,
         {
           method: "POST",
           headers: {
@@ -161,7 +162,7 @@ const CreateDriver = () => {
         rent,
       };
       const response = await fetch(
-        `http://192.168.1.9:5000/api/auth/createDriver`,
+        `${API_URL}/api/auth/createDriver`,
         {
           method: "POST",
           headers: {

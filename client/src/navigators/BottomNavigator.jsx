@@ -17,7 +17,7 @@ const BottomNavigator = () => {
     <Tab.Navigator
       initialRouteName="Profile"
       activeColor="#ffffff"
-      inactiveColor="#ffffff"
+      inactiveColor="#c3c3c3"
       barStyle={{ backgroundColor: "#114084" }}
       shifting={true}
       backBehavior="initialRoute"

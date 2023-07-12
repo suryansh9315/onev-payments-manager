@@ -13,7 +13,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { CheckBox } from '@rneui/themed';
 import { useRecoilState } from "recoil";
-import { admin, number, sessionToken } from "../atoms/User";
+import { admin, number, sessionToken, user } from "../atoms/User";
 import Loader from "../components/Loader";
 import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
@@ -26,6 +26,7 @@ const height = Dimensions.get("window").height;
 const LoginScreen = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
+  const [userr, setUser] = useRecoilState(user);
   const [token, setToken] = useRecoilState(sessionToken);
   const [loading, setLoading] = useState(false);
 
@@ -37,6 +38,7 @@ const LoginScreen = ({ navigation }) => {
         setToken(user_info.token);
         setIsAdmin(user_info.isAdmin);
         setPhone(user_info.phone);
+        setUser(user_info.userr)
       }
     } catch (e) {
       console.log(e);
@@ -61,10 +63,11 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const requestOtp = async () => {
+    if (phone.length !== 10) return
     try {
       setLoading(true);
       const response = await fetch(
-        `http://192.168.1.6:5000/api/auth/login`,
+        `http://192.168.1.9:5000/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -84,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
         setLoading(false);
       } else {
         setLoading(false);
-        alert("Something went wrong...");
+        alert(`${json.message}`);
       }
     } catch (error) {
       setLoading(false);

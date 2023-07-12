@@ -5,7 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const AllHistory = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text>AllHistory</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Coming Soon</Text>
+      </View>
     </SafeAreaView>
   )
 }

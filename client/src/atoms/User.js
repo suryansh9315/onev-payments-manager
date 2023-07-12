@@ -14,3 +14,8 @@ export const number = atom({
   key: 'Number',
   default: null,
 });
+
+export const user = atom({
+  key: 'User',
+  default: null,
+});

@@ -4,11 +4,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
-import { sessionToken, admin, number } from "../atoms/User";
+import { sessionToken, admin, number, user } from "../atoms/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon, Input } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
@@ -20,6 +21,7 @@ const CreateDriver = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useRecoilState(sessionToken);
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
+  const [userr, setUser] = useRecoilState(user);
   const [phone, setPhone] = useRecoilState(number);
   const [name, setName] = useState("");
   const [dNumber, setDNumber] = useState("");
@@ -69,12 +71,64 @@ const CreateDriver = () => {
       !dLBack ||
       !rCFront ||
       !rCBack ||
-      !dNumber
+      !dNumber ||
+      !name ||
+      !vNumber ||
+      !vModel ||
+      !rent
     ) {
       return alert("Upload all Images...");
     }
     try {
       setLoading(true);
+      const isTokenValid = await fetch(
+        `http://192.168.1.9:5000/api/auth/getDriver`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token,
+            dNumber: "+91" + dNumber,
+          }),
+        }
+      );
+      const jsonn = await isTokenValid.json();
+      if (isTokenValid.status === 400) {
+        setAadharFront(null);
+        setAadharBack(null);
+        setDLFront(null);
+        setDLBack(null);
+        setRCFront(null);
+        setRCBack(null);
+        setName("");
+        setDNumber("");
+        setVModel("");
+        setVNumber("");
+        setRent("");
+        alert(`${jsonn.message}`);
+        logout();
+        setLoading(false);
+        return;
+      }
+      if (isTokenValid.status === 401) {
+        setAadharFront(null);
+        setAadharBack(null);
+        setDLFront(null);
+        setDLBack(null);
+        setRCFront(null);
+        setRCBack(null);
+        setName("");
+        setDNumber("");
+        setVModel("");
+        setVNumber("");
+        setRent("");
+        alert(`${jsonn.message}`);
+        setLoading(false);
+        return;
+      }
       const aadharFrontRef = ref(storage, `drivers/${dNumber}/aadharFront`);
       const aadharBackRef = ref(storage, `drivers/${dNumber}/aadharBack`);
       const dlFrontRef = ref(storage, `drivers/${dNumber}/dlFront`);
@@ -93,12 +147,51 @@ const CreateDriver = () => {
       const dlBackURL = await getDownloadURL(dlBackRef);
       const rcFrontURL = await getDownloadURL(rcFrontRef);
       const rcBackURL = await getDownloadURL(rcBackRef);
+      const driver_obj = {
+        name,
+        aadharFrontURL,
+        aadharBackURL,
+        rcFrontURL,
+        rcBackURL,
+        dlFrontURL,
+        dlBackURL,
+        dNumber: "+91 " + dNumber,
+        vNumber,
+        vModel,
+        rent,
+      };
+      const response = await fetch(
+        `http://192.168.1.9:5000/api/auth/createDriver`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            driver_obj,
+            token,
+          }),
+        }
+      );
+      const json = await response.json();
+      console.log(json);
+      if (response.status === 400) {
+        setLoading(false);
+        return alert(`${json.message}`);
+      }
+      alert(`${json.message}`);
       setAadharFront(null);
       setAadharBack(null);
       setDLFront(null);
       setDLBack(null);
       setRCFront(null);
       setRCBack(null);
+      setName("");
+      setDNumber("");
+      setVModel("");
+      setVNumber("");
+      setRent("");
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -116,10 +209,11 @@ const CreateDriver = () => {
   };
 
   const logout = () => {
+    deleteData();
     setToken(null);
     setIsAdmin(false);
     setPhone(null);
-    deleteData();
+    setUser(null);
   };
 
   if (loading) {
@@ -130,6 +224,20 @@ const CreateDriver = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.containerWrapper}>
+          <View style={styles.profileContainer}>
+            <View>
+              <Text style={{ fontSize: 22 }}>{userr?.name}</Text>
+              <Text style={{ fontSize: 14, color: "gray" }}>
+                {userr?.number}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={logout}>
+              <Image
+                source={require("../../assets/Profile.png")}
+                style={{ height: 70, width: 70 }}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.heading}>Add New Driver</Text>
           <View style={styles.inputContainer}>
             <Input
@@ -143,6 +251,7 @@ const CreateDriver = () => {
                 marginBottom: 5,
                 fontSize: 14,
               }}
+              errorStyle={{ display: "none" }}
               inputContainerStyle={{
                 borderWidth: 1,
                 paddingHorizontal: 15,
@@ -155,6 +264,7 @@ const CreateDriver = () => {
               value={vNumber}
               onChangeText={(e) => setVNumber(e)}
               label="Vehicle Number"
+              errorStyle={{ display: "none" }}
               labelStyle={{
                 color: "#000",
                 fontWeight: "100",
@@ -172,6 +282,7 @@ const CreateDriver = () => {
               placeholder="i10 Sports"
               value={vModel}
               onChangeText={(e) => setVModel(e)}
+              errorStyle={{ display: "none" }}
               label="Vehicle Model"
               labelStyle={{
                 color: "#000",
@@ -191,6 +302,7 @@ const CreateDriver = () => {
               value={dNumber}
               onChangeText={(e) => setDNumber(e)}
               keyboardType="numeric"
+              errorStyle={{ display: "none" }}
               label="Driver Number"
               labelStyle={{
                 color: "#000",
@@ -209,6 +321,7 @@ const CreateDriver = () => {
               placeholder="$ 800"
               value={rent}
               onChangeText={(e) => setRent(e)}
+              errorStyle={{ display: "none" }}
               keyboardType="numeric"
               label="Rent"
               labelStyle={{
@@ -229,6 +342,7 @@ const CreateDriver = () => {
                 containerStyle={{
                   width: "50%",
                 }}
+                errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
                   <View style={{ flexDirection: "row", gap: 8 }}>
@@ -275,6 +389,7 @@ const CreateDriver = () => {
                   marginBottom: 5,
                   fontSize: 14,
                 }}
+                errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
                   <View style={{ flexDirection: "row", gap: 8 }}>
@@ -315,6 +430,7 @@ const CreateDriver = () => {
                 containerStyle={{
                   width: "50%",
                 }}
+                errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
                   <View style={{ flexDirection: "row", gap: 8 }}>
@@ -361,6 +477,7 @@ const CreateDriver = () => {
                   marginBottom: 5,
                   fontSize: 14,
                 }}
+                errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
                   <View style={{ flexDirection: "row", gap: 8 }}>
@@ -402,6 +519,7 @@ const CreateDriver = () => {
                   width: "50%",
                 }}
                 editable={false}
+                errorStyle={{ display: "none" }}
                 rightIcon={
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <TouchableOpacity
@@ -447,6 +565,7 @@ const CreateDriver = () => {
                   marginBottom: 5,
                   fontSize: 14,
                 }}
+                errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
                   <View style={{ flexDirection: "row", gap: 8 }}>
@@ -502,16 +621,27 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   heading: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "500",
-    marginBottom: 30,
-    marginTop: 10,
+    marginBottom: 15,
+    marginTop: 20,
   },
-  inputContainer: {},
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    width: "100%",
+    borderRadius: 5,
+  },
+  inputContainer: {
+    gap: 20,
+  },
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 30,
   },
   button: {
     backgroundColor: "#3bbcc5",

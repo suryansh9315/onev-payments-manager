@@ -6,18 +6,25 @@ const managers = database.collection("managers");
 
 const verifyToken = (req, res, next) => {
   // Check if the Auth Token exists
-  const token = req.body.token || req.query.token || req.headers["x-access-token"];
-  
+  const token =
+    req.body.token || req.query.token || req.headers["x-access-token"];
+
   if (!token) {
-    return res.status(403).send("A token is required for authentication");
+    return res.status(400).json({
+      status: "error",
+      message: "A token is required for authentication.",
+    });
   }
   try {
-    // Validate Auth Token 
+    // Validate Auth Token
     const decoded = verify_jwt(token);
     // Add decoded data to request
     req.userId = decoded.id;
   } catch (err) {
-    return res.status(401).send("Invalid Token");
+    return res.status(400).json({
+      status: "error",
+      message: "Invalid Token.",
+    });
   }
   return next();
 };
@@ -31,7 +38,7 @@ const verifyManager = async (req, res, next) => {
       .status(400)
       .json({ status: "error", message: "Manager does not exist." });
   }
-  req.manager = manager
+  req.manager = manager;
   return next();
 };
 

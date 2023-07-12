@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { admin, number, sessionToken } from "../atoms/User";
+import { admin, number, sessionToken, user } from "../atoms/User";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Loader from "../components/Loader";
 import {
@@ -12,6 +12,7 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '@env'
 
 const CELL_COUNT = 4;
 
@@ -19,6 +20,7 @@ const OtpScreen = ({ navigation }) => {
   const isAdmin = useRecoilValue(admin);
   const phone = useRecoilValue(number);
   const [token, setToken] = useRecoilState(sessionToken);
+  const [userr, setUser] = useRecoilState(user);
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false)
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
@@ -27,10 +29,10 @@ const OtpScreen = ({ navigation }) => {
     setValue,
   });
 
-  const storeData = async (token) => {
+  const storeData = async (token, userr) => {
     try {
       const object = {
-        isAdmin, phone, token
+        isAdmin, phone, token, userr
       }
       const jsonValue = JSON.stringify(object);
       await AsyncStorage.setItem('user_info', jsonValue);
@@ -41,10 +43,11 @@ const OtpScreen = ({ navigation }) => {
   };
 
   const handleOTPSubmit = async () => {
+    if (value.length !== 4) return
     try {
       setLoading(true)
       const response = await fetch(
-        `http://192.168.1.6:5000/api/auth/verifyOtp`,
+        `${API_URL}/api/auth/verifyOtp`,
         {
           method: "POST",
           headers: {
@@ -62,7 +65,8 @@ const OtpScreen = ({ navigation }) => {
       console.log(json)
       if (response.status === 200) {
         setToken(json.token);
-        storeData(json.token)
+        setUser(json.user)
+        storeData(json.token, json.user)
         setLoading(false)
       } else {
         setLoading(false)

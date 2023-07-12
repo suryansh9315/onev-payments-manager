@@ -33,9 +33,9 @@ app.post("/login", async (req, res) => {
   try {
     const isManager = req.body.isManager;
     const number = req.body.number;
-    const query = { number: number };
     if (isManager) {
       // Find Manager in Database
+      const query = { number: number };
       const manager = await managers.findOne(query);
       if (!manager) {
         return res
@@ -44,6 +44,7 @@ app.post("/login", async (req, res) => {
       }
     } else {
       // Find Driver in Database
+      const query = { dNumber: number };
       const driver = await drivers.findOne(query);
       if (!driver) {
         return res
@@ -83,7 +84,6 @@ app.post("/verifyOtp", async (req, res) => {
     const otp = req.body.otp;
     const number = req.body.number;
     const isManager = req.body.isManager;
-    const query = { number: number };
     // Verify O.T.P
     const new_verificationCheck = await verificationsChecks.create({
       to: number,
@@ -94,6 +94,7 @@ app.post("/verifyOtp", async (req, res) => {
     }
     let user;
     if (isManager) {
+      const query = { number: number };
       // Find Manager in Database
       const manager = await managers.findOne(query);
       if (!manager) {
@@ -101,16 +102,17 @@ app.post("/verifyOtp", async (req, res) => {
           .status(400)
           .json({ status: "error", message: "Manager does not exist." });
       }
-      user = manager
+      user = manager;
     } else {
       // Find Driver in Database
+      const query = { dNumber: number };
       const driver = await drivers.findOne(query);
       if (!driver) {
         return res
-        .status(400)
-        .json({ status: "error", message: "Driver does not exist." });
+          .status(400)
+          .json({ status: "error", message: "Driver does not exist." });
       }
-      user = driver
+      user = driver;
     }
     // Return JWT Token with user data
     const token = sign_jwt({ id: user._id });
@@ -118,7 +120,7 @@ app.post("/verifyOtp", async (req, res) => {
       status: "success",
       message: "Phone number verified...",
       token,
-      user
+      user,
     });
   } catch (error) {
     res.status(400).json({ status: "error", message: "err", error });
@@ -138,16 +140,14 @@ app.post("/updateDriver", verifyToken, async (req, res) => {
 });
 
 app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
-  console.log(req)
-  // Validate User Input
-  if (!req.body.driver.number || req.body.driver.number.length != 14) {
+  if (!req.body.driver_obj) {
     return res
       .status(400)
       .json({ status: "error", message: "Missing fields for creating..." });
   }
-  const number = req.body.driver.number;
-  const query = { number: number }
-  const oldDriver = await drivers.findOne(query)
+  const number = req.body.driver_obj.dNumber;
+  const query = { dNumber: number };
+  const oldDriver = await drivers.findOne(query);
   if (oldDriver) {
     return res.status(400).json({
       status: "failure",
@@ -155,13 +155,96 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
     });
   }
   const driverObject = {
-    number: number,
+    ...req.body.driver_obj,
+    payment_status: false,
+    balance: 0,
+    date: Date.now(),
+    admin_name: req.manager.name,
+    admin_number: req.manager.number,
   };
   const newDriver = await drivers.insertOne(driverObject);
   res.status(200).json({
     status: "success",
     message: "Driver created.",
-    driverObject
+  });
+});
+
+app.post("/checkToken", verifyToken, (req, res) => {
+  res.status(200).json({ status: "success", message: "Token Valid." });
+});
+
+app.post("/getDriver", verifyToken, verifyManager, async (req, res) => {
+  if (!req.body.dNumber) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Missing fields for creating..." });
+  }
+  const dNumber = req.body.dNumber;
+  const query = { dNumber };
+  const oldDriver = await drivers.findOne(query);
+  if (oldDriver) {
+    return res.status(401).json({
+      status: "failure",
+      message: "Driver already exists.",
+    });
+  }
+  res.status(200).json({ status: "success", message: "Token Valid." });
+});
+
+app.post("/getAllDrivers", verifyToken, verifyManager, async (req, res) => {
+  const query = { name: { $exists: true } };
+  const options = {
+    sort: { name: 1 },
+  };
+  const allDrivers = drivers.find(query, options);
+  docs = [];
+  for await (const doc of allDrivers) {
+    docs.push(doc);
+  }
+  res.status(200).json({ status: "success", message: "Token Valid.", docs });
+});
+
+app.post("/updatePayStatus", verifyToken, verifyManager, async (req, res) => {
+  if (!req.body.dNumber) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Missing fields for creating..." });
+  }
+  const dNumber = req.body.dNumber;
+  const query = { dNumber };
+  const oldDriver = await drivers.findOne(query);
+  if (!oldDriver) {
+    return res.status(401).json({
+      status: "failure",
+      message: "Driver doesn't exists."
+    });
+  }
+  const old_payment_status = oldDriver.payment_status
+  const old_balance = oldDriver.balance
+  const rent = oldDriver.rent
+  let new_balance = old_balance
+  if (old_payment_status) {
+    new_balance -= rent
+  } else {
+    new_balance += rent
+  }
+  const update = {
+    $set: {
+      payment_status: !old_payment_status,
+      balance: new_balance,
+    },
+  };
+  const options = { upsert: false };
+  const result = await drivers.updateOne(query, update, options);
+  const { matchedCount, modifiedCount } = result;
+  if (matchedCount && modifiedCount) {
+    return res
+      .status(200)
+      .json({ status: "success", message: "Payment Status Updated." });
+  }
+  res.status(401).json({
+    status: "failure",
+    message: "Something went wrong."
   });
 });
 

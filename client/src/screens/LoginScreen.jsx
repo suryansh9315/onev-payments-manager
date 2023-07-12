@@ -30,11 +30,46 @@ const LoginScreen = ({ navigation }) => {
   const [token, setToken] = useRecoilState(sessionToken);
   const [loading, setLoading] = useState(false);
 
+  const deleteData = async () => {
+    try {
+      await AsyncStorage.removeItem("user_info");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const logout = () => {
+    deleteData();
+    setToken(null);
+    setIsAdmin(false);
+    setPhone(null);
+    setUser(null);
+  };
+
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("user_info");
       if (jsonValue !== null) {
         const user_info = JSON.parse(jsonValue);
+        const response = await fetch(
+          `http://192.168.1.9:5000/api/auth/checkToken`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              token: user_info.token,
+            }),
+          }
+        );
+        const json = await response.json();
+        if (response.status === 400) {
+          alert(`${json.message}`);
+          logout();
+          return;
+        }
         setToken(user_info.token);
         setIsAdmin(user_info.isAdmin);
         setPhone(user_info.phone);

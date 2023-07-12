@@ -103,11 +103,11 @@ const CreateDriver = () => {
         setDLBack(null);
         setRCFront(null);
         setRCBack(null);
-        setName("");
-        setDNumber("");
-        setVModel("");
-        setVNumber("");
-        setRent("");
+        setName("")
+        setDNumber("")
+        setVModel("")
+        setVNumber("")
+        setRent("")
         alert(`${jsonn.message}`);
         logout();
         setLoading(false);
@@ -120,11 +120,11 @@ const CreateDriver = () => {
         setDLBack(null);
         setRCFront(null);
         setRCBack(null);
-        setName("");
-        setDNumber("");
-        setVModel("");
-        setVNumber("");
-        setRent("");
+        setName("")
+        setDNumber("")
+        setVModel("")
+        setVNumber("")
+        setRent("")
         alert(`${jsonn.message}`);
         setLoading(false);
         return;
@@ -187,11 +187,6 @@ const CreateDriver = () => {
       setDLBack(null);
       setRCFront(null);
       setRCBack(null);
-      setName("");
-      setDNumber("");
-      setVModel("");
-      setVNumber("");
-      setRent("");
       setLoading(false);
     } catch (error) {
       setLoading(false);

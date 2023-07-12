@@ -64,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://192.168.1.2:5000/api/auth/login`,
+        `http://192.168.1.6:5000/api/auth/login`,
         {
           method: "POST",
           headers: {

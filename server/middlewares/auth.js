@@ -3,6 +3,7 @@ const { mongoClient } = require("../database");
 const { ObjectId } = require("mongodb");
 const database = mongoClient.db("onev");
 const managers = database.collection("managers");
+const drivers = database.collection("drivers");
 
 const verifyToken = (req, res, next) => {
   // Check if the Auth Token exists
@@ -42,4 +43,17 @@ const verifyManager = async (req, res, next) => {
   return next();
 };
 
-module.exports = { verifyToken, verifyManager };
+const verifyDriver = async (req, res, next) => {
+  const userId = req.userId;
+  const query = { _id: new ObjectId(userId) };
+  const driver = await drivers.findOne(query);
+  if (!driver) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "Driver does not exist." });
+  }
+  req.driver = driver;
+  return next();
+};
+
+module.exports = { verifyToken, verifyManager, verifyDriver };

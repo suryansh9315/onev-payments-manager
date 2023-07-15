@@ -5,7 +5,7 @@ import { PanResponder, Animated, Text, View, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
 
-const CircularSlider = ({ initialPayment, maxPayment = 5000 }) => {
+const CircularSlider = ({ payment, maxPayment = 5000, setPayment }) => {
   const PADDING = 50;
   const size = width - PADDING * 2;
   const strokeWidth = 50;
@@ -13,10 +13,8 @@ const CircularSlider = ({ initialPayment, maxPayment = 5000 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  const initialPercentage = (initialPayment / maxPayment) * 100;
+  const initialPercentage = (payment / maxPayment) * 100;
   const [percentage, setPercentage] = useState(initialPercentage);
-  const [payment, setPayment] = useState(initialPayment);
-
   const angle = (2 * Math.PI * payment) / maxPayment;
   const initialEndX = radius * Math.sin(angle);
   const initialEndY = radius * Math.cos(angle);
@@ -62,7 +60,7 @@ const CircularSlider = ({ initialPayment, maxPayment = 5000 }) => {
       style={[
         {
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "center"
         },
       ]}
     >
@@ -138,8 +136,8 @@ const CircularSlider = ({ initialPayment, maxPayment = 5000 }) => {
         />
       </Animated.View>
       <View style={{ position: "absolute" }}>
-        <Text style={{ fontSize: 30, color: "#114084", fontWeight: 500 }}>
-          {String(payment).substring(0, 6)}
+        <Text style={{ fontSize: 36, color: "#000", fontWeight: 600 }}>
+          &#8377;{String(payment).substring(0, 6)}
         </Text>
       </View>
     </Animated.View>

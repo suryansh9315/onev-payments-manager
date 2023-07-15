@@ -1,14 +1,16 @@
 import { StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
-import { useRecoilState } from "recoil";
-import { sessionToken, admin, number } from "../atoms/User";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { sessionToken, admin, number, user } from "../atoms/User";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const [token, setToken] = useRecoilState(sessionToken);
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
+  const [user_info, setUser] = useRecoilState(user);
+  console.log(user_info)
 
   const deleteData = async () => {
     try {
@@ -19,10 +21,11 @@ const HomeScreen = () => {
   };
 
   const logout = () => {
+    deleteData();
     setToken(null);
     setIsAdmin(false);
     setPhone(null);
-    deleteData()
+    setUser(null);
   };
 
   return (

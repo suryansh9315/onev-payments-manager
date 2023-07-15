@@ -630,8 +630,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 10,
     paddingHorizontal: 20,
+    paddingVertical: 10,
     width: "100%",
-    borderRadius: 5,
+    borderRadius: 10,
   },
   inputContainer: {
     gap: 20,

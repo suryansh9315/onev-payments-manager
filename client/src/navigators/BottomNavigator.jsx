@@ -1,58 +1,29 @@
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import PaymentScreen from "../screens/PaymentScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import HomeScreen from "../screens/HomeScreen";
-import Octicons from "@expo/vector-icons/Octicons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useTheme } from "react-native-paper";
+import SettingsScreen from "../screens/SettingsScreen";
+import LogoutScreen from "../screens/LogoutScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import CustomDrawer from "../components/CustomDrawer";
 
-const Tab = createMaterialBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const BottomNavigator = () => {
-  const theme = useTheme();
-  theme.colors.secondaryContainer = "transperent";
-
   return (
-    <Tab.Navigator
-      initialRouteName="Payment"
-      activeColor="#ffffff"
-      inactiveColor="#c3c3c3"
-      barStyle={{ backgroundColor: "#114084" }}
-      shifting={true}
-      backBehavior="initialRoute"
-    >
-      <Tab.Screen
-        name="Payment"
-        component={PaymentScreen}
-        options={{
-          tabBarLabel: "Pay",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="payments" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home-variant" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="History"
-        component={HistoryScreen}
-        options={{
-          tabBarLabel: "History",
-          tabBarIcon: ({ color }) => (
-            <Octicons name="history" size={26} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <>
+      <Drawer.Navigator
+        initialRouteName="HomeDriver"
+        backBehavior="initialRoute"
+        screenOptions={{ headerShown: false, drawerStyle: { width: '80%' }}}
+        drawerContent={(props) => <CustomDrawer {...props} />}
+      >
+        <Drawer.Screen name="Payment" component={PaymentScreen} />
+        <Drawer.Screen name="HomeDriver" component={HomeScreen} />
+        <Drawer.Screen name="History" component={HistoryScreen} />
+        <Drawer.Screen name="Settings" component={SettingsScreen} />
+        <Drawer.Screen name="Logout" component={LogoutScreen} />
+      </Drawer.Navigator>
+    </>
   );
 };
 

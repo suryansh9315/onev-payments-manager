@@ -21,6 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from '@env' 
 
 SplashScreen.preventAutoHideAsync();
+console.log(API_URL.substring(0,0))
 
 const height = Dimensions.get("window").height;
 

@@ -15,7 +15,7 @@ const BottomNavigator = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Payment"
       activeColor="#ffffff"
       inactiveColor="#c3c3c3"
       barStyle={{ backgroundColor: "#114084" }}

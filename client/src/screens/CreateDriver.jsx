@@ -18,6 +18,8 @@ import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import Loader from "../components/Loader";
 import { API_URL } from '@env'
 
+console.log(API_URL.substring(0,0))
+
 const CreateDriver = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useRecoilState(sessionToken);

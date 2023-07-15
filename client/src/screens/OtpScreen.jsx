@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '@env'
 
 const CELL_COUNT = 4;
+console.log(API_URL.substring(0,0))
 
 const OtpScreen = ({ navigation }) => {
   const isAdmin = useRecoilValue(admin);

@@ -1,13 +1,43 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import CircularSlider from "../components/CircularSlider";
+import { useNavigation } from "@react-navigation/native";
+import { Icon } from "@rneui/themed";
 
 const PaymentScreen = () => {
   const [payment, setPayment] = useState(1000);
+  const navigation = useNavigation();
+  const { top } = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <TouchableOpacity
+        onPress={() => navigation.openDrawer()}
+        style={{
+          position: "absolute",
+          zIndex: 1000,
+          top,
+          left: 0,
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+        }}
+      >
+        <Icon
+          name="menu-unfold"
+          type="antdesign"
+          size={36}
+          style={{
+            height: 50,
+            width: 50,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        />
+      </TouchableOpacity>
       <View
         style={{
           flex: 1,
@@ -15,11 +45,17 @@ const PaymentScreen = () => {
           justifyContent: "center",
           gap: 30,
           paddingVertical: 40,
-          backgroundColor: '#fff'
+          backgroundColor: "#fff",
         }}
       >
         <View
-          style={{ alignItems: "center", justifyContent: "center", gap: 8, position: 'absolute', top: 80 }}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            position: "absolute",
+            top: 100,
+          }}
         >
           <Text style={{ fontSize: 20, fontWeight: 600 }}>
             Paying the due amount
@@ -36,18 +72,25 @@ const PaymentScreen = () => {
           </Text>
         </View>
         <CircularSlider payment={payment} setPayment={setPayment} />
-        <View style={{ position: 'absolute', bottom: 30 }}>
-          <TouchableOpacity>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 30,
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity style={{ width: "100%", alignItems: "center" }}>
             <Text
               style={{
-                backgroundColor: "#f4338f",
-                paddingVertical: 12,
-                width: 300,
-                textAlign: 'center',
-                borderRadius: 50,
+                backgroundColor: "#F75428",
+                paddingVertical: 15,
+                width: "90%",
+                textAlign: "center",
+                borderRadius: 10,
                 color: "#fff",
                 fontSize: 16,
-                fontWeight: 600
+                fontWeight: 600,
               }}
             >
               Pay &#8377;{payment}

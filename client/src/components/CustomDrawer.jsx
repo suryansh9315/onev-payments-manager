@@ -22,7 +22,7 @@ const items = [
   },
   {
     icon: "payment",
-    label: "Payment",
+    label: "Pay",
     screen: "Payment",
     color: "#F75428",
     type: "",
@@ -120,10 +120,10 @@ const CustomDrawer = (props) => {
             backgroundColor: "#fff",
             paddingHorizontal: 30,
             paddingVertical: 40,
-            gap: 20,
+            gap: 15,
           }}
         >
-          <View style={{ alignItems: "center", paddingVertical: 20, gap: 5 }}>
+          <View style={{ alignItems: "center", paddingVertical: 15, gap: 5 }}>
             <Text style={{ fontWeight: "500", fontSize: 24 }}>
               {user_info?.name}
             </Text>

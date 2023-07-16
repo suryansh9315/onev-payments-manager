@@ -14,11 +14,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon, Input } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../firebaseConfig";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
 import Loader from "../components/Loader";
-import { API_URL } from '@env'
+import { API_URL } from "@env";
 
-console.log(API_URL.substring(0,0))
+console.log(API_URL.substring(0, 0));
 
 const CreateDriver = () => {
   const [loading, setLoading] = useState(false);
@@ -45,10 +49,9 @@ const CreateDriver = () => {
       allowsMultipleSelection: false,
       aspect: [4, 3],
       quality: 1,
-      base64: true,
     });
     if (!result.canceled) {
-      setImage(result.assets[0].base64);
+      setImage(result.assets[0].uri);
     }
   };
 
@@ -59,11 +62,29 @@ const CreateDriver = () => {
       allowsMultipleSelection: false,
       aspect: [4, 3],
       quality: 1,
-      base64: true,
     });
     if (!result.canceled) {
       setImage(result.assets[0].base64);
     }
+  };
+
+  const uploadImageAsync = async (image, ref) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", image, true);
+      xhr.send(null);
+    });
+    await uploadBytes(ref, blob);
+    blob.close();
+    return await getDownloadURL(ref);
   };
 
   const handleSubmit = async () => {
@@ -84,20 +105,17 @@ const CreateDriver = () => {
     }
     try {
       setLoading(true);
-      const isTokenValid = await fetch(
-        `${API_URL}/api/auth/getDriver`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token,
-            dNumber: "+91" + dNumber,
-          }),
-        }
-      );
+      const isTokenValid = await fetch(`${API_URL}/api/auth/getDriver`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          dNumber: "+91" + dNumber,
+        }),
+      });
       const jsonn = await isTokenValid.json();
       if (isTokenValid.status === 400) {
         setAadharFront(null);
@@ -106,11 +124,11 @@ const CreateDriver = () => {
         setDLBack(null);
         setRCFront(null);
         setRCBack(null);
-        setName("")
-        setDNumber("")
-        setVModel("")
-        setVNumber("")
-        setRent("")
+        setName("");
+        setDNumber("");
+        setVModel("");
+        setVNumber("");
+        setRent("");
         alert(`${jsonn.message}`);
         logout();
         setLoading(false);
@@ -123,11 +141,11 @@ const CreateDriver = () => {
         setDLBack(null);
         setRCFront(null);
         setRCBack(null);
-        setName("")
-        setDNumber("")
-        setVModel("")
-        setVNumber("")
-        setRent("")
+        setName("");
+        setDNumber("");
+        setVModel("");
+        setVNumber("");
+        setRent("");
         alert(`${jsonn.message}`);
         setLoading(false);
         return;
@@ -138,18 +156,12 @@ const CreateDriver = () => {
       const dlBackRef = ref(storage, `drivers/${dNumber}/dlBack`);
       const rcFrontRef = ref(storage, `drivers/${dNumber}/rcFront`);
       const rcBackRef = ref(storage, `drivers/${dNumber}/rcBack`);
-      await uploadString(aadharFrontRef, aadharFront, "base64");
-      await uploadString(aadharBackRef, aadharBack, "base64");
-      await uploadString(dlFrontRef, dLFront, "base64");
-      await uploadString(dlBackRef, dLBack, "base64");
-      await uploadString(rcFrontRef, rCFront, "base64");
-      await uploadString(rcBackRef, rCBack, "base64");
-      const aadharFrontURL = await getDownloadURL(aadharFrontRef);
-      const aadharBackURL = await getDownloadURL(aadharBackRef);
-      const dlFrontURL = await getDownloadURL(dlFrontRef);
-      const dlBackURL = await getDownloadURL(dlBackRef);
-      const rcFrontURL = await getDownloadURL(rcFrontRef);
-      const rcBackURL = await getDownloadURL(rcBackRef);
+      const aadharFrontURL = await uploadImageAsync(aadharFront, aadharFrontRef);
+      const aadharBackURL = await uploadImageAsync(aadharBack, aadharBackRef);
+      const dlFrontURL = await uploadImageAsync(dLFront, dlFrontRef);
+      const dlBackURL = await uploadImageAsync(dLBack, dlBackRef);
+      const rcFrontURL = await uploadImageAsync(rCFront, rcFrontRef);
+      const rcBackURL = await uploadImageAsync(rCBack, rcBackRef);
       const driver_obj = {
         name,
         aadharFrontURL,
@@ -163,20 +175,17 @@ const CreateDriver = () => {
         vModel,
         rent,
       };
-      const response = await fetch(
-        `${API_URL}/api/auth/createDriver`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            driver_obj,
-            token,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/auth/createDriver`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          driver_obj,
+          token,
+        }),
+      });
       const json = await response.json();
       console.log(json);
       if (response.status === 400) {
@@ -190,6 +199,11 @@ const CreateDriver = () => {
       setDLBack(null);
       setRCFront(null);
       setRCBack(null);
+      setName("");
+      setDNumber("");
+      setVModel("");
+      setVNumber("");
+      setRent("");
       setLoading(false);
     } catch (error) {
       setLoading(false);

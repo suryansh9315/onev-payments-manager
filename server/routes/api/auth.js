@@ -157,10 +157,11 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
   const driverObject = {
     ...req.body.driver_obj,
     payment_status: false,
-    balance: 0,
+    balance: -req.body.driver_obj.rent,
     date: Date.now(),
     admin_name: req.manager.name,
     admin_number: req.manager.number,
+    Paid: 0
   };
   const newDriver = await drivers.insertOne(driverObject);
   res.status(200).json({

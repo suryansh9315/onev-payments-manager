@@ -79,7 +79,7 @@ const CircularSlider = ({ payment, maxPayment = 5000, setPayment }) => {
             cx={center}
             cy={center}
             r={radius}
-            stroke="#f4338f"
+            stroke="#F75428"
             strokeWidth={strokeWidth}
             fill="white"
             fillOpacity={0}

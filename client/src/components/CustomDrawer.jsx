@@ -69,7 +69,7 @@ const CustomDrawer = (props) => {
   return (
     <DrawerContentScrollView
       {...props}
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      style={{ backgroundColor: "rgba(0, 0, 0, 1)" }}
     >
       <View
         style={{

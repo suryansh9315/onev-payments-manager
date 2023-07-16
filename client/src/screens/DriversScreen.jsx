@@ -12,7 +12,7 @@ import SortAccordion from "../components/SortAccordion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from '@env'
 
-console.log(API_URL.substring(0,0))
+console.log(API_URL?.substring(0,0))
 
 const DriversScreen = () => {
   const isFocused = useIsFocused();

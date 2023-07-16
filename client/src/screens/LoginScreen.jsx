@@ -21,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from '@env' 
 
 SplashScreen.preventAutoHideAsync();
-console.log(API_URL.substring(0,0))
+console.log(API_URL?.substring(0,0))
 
 const height = Dimensions.get("window").height;
 
@@ -100,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const requestOtp = async () => {
-    if (phone.length !== 10) return
+    if (phone?.length !== 10) return
     try {
       setLoading(true);
       const response = await fetch(

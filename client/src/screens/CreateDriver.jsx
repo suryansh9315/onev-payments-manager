@@ -22,7 +22,7 @@ import {
 import Loader from "../components/Loader";
 import { API_URL } from "@env";
 
-console.log(API_URL.substring(0, 0));
+console.log(API_URL?.substring(0, 0));
 
 const CreateDriver = () => {
   const [loading, setLoading] = useState(false);

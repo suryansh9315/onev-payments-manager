@@ -5,7 +5,7 @@ import { sessionToken } from "../atoms/User";
 import { useRecoilValue } from "recoil";
 import { API_URL } from '@env'
 
-console.log(API_URL.substring(0,0))
+console.log(API_URL?.substring(0,0))
 
 const DriverAccordion = ({ driver, logout, setReload, reload }) => {
   const [expanded, setExpanded] = useState(false);

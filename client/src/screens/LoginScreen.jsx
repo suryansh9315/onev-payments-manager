@@ -63,6 +63,8 @@ const LoginScreen = ({ navigation }) => {
             },
             body: JSON.stringify({
               token: user_info.token,
+              phone: user_info.phone,
+              isAdmin: user_info.isAdmin
             }),
           }
         );
@@ -75,7 +77,7 @@ const LoginScreen = ({ navigation }) => {
         setToken(user_info.token);
         setIsAdmin(user_info.isAdmin);
         setPhone(user_info.phone);
-        setUser(user_info.userr)
+        setUser(json.user)
       }
     } catch (e) {
       console.log(e);

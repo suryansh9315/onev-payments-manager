@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -7,11 +7,107 @@ import {
 import CircularSlider from "../components/CircularSlider";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { user, sessionToken } from "../atoms/User";
+import Loader from "../components/Loader";
+import { API_URL, RAZORPAY_KEY_ID } from "@env";
+import RazorpayCheckout from "react-native-razorpay";
+
+console.log(API_URL?.substring(0, 0), RAZORPAY_KEY_ID?.substring(0, 0));
 
 const PaymentScreen = () => {
-  const [payment, setPayment] = useState(1000);
+  const [driver_info, setDriverInfo] = useRecoilState(user);
+  const token = useRecoilValue(sessionToken);
+  const [payment, setPayment] = useState(
+    driver_info?.balance < 0 ? -driver_info?.balance : 0
+  );
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
+  const [loading, setLoading] = useState(false);
+
+  const handlePayment = async () => {
+    if (payment < 500) return;
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/api/orders/createOrder`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: payment,
+          token,
+        }),
+      });
+      const json = await response.json();
+      if (response.status !== 200) {
+        return alert(json?.message);
+      }
+      const order_id = json.order_id;
+      const txnId = json.txnId;
+      const options = {
+        currency: "INR",
+        key: RAZORPAY_KEY_ID,
+        amount: payment,
+        name: "Paycol Corp",
+        order_id,
+        prefill: {
+          email: "test@test.com",
+          contact: driver_info?.dNumber.split(" ").join(),
+          name: driver_info?.name,
+        },
+      };
+      RazorpayCheckout.open(options)
+        .then(async (data) => {
+          const responseV = await fetch(
+            `${API_URL}/api/payments/verifySignature`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                txnId,
+                token,
+                razorpay_payment_id: data.razorpay_payment_id,
+                razorpay_order_id: data.razorpay_order_id,
+                razorpay_signature: data.razorpay_signature,
+              }),
+            }
+          );
+          const jsonV = await responseV.json();
+          if (response.status !== 200) {
+            return alert(jsonV?.message);
+          }
+          const old_balance = driver_info.balance;
+          const old_Paid = driver_info.Paid;
+          const user_info_copy = driver_info;
+          delete user_info_copy.balance;
+          delete user_info_copy.Paid;
+          setDriverInfo({
+            ...user_info_copy,
+            balance: old_balance + payment,
+            Paid: old_Paid + payment,
+          });
+          alert(jsonV?.message);
+          setLoading(false);
+          navigation.navigate("HomeDriver");
+        })
+        .catch((error) => {
+          setLoading(false);
+          alert("Something went wrong");
+        });
+    } catch (error) {
+      setLoading(false);
+      alert("Something went wrong");
+    }
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -80,7 +176,10 @@ const PaymentScreen = () => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity style={{ width: "100%", alignItems: "center" }}>
+          <TouchableOpacity
+            style={{ width: "100%", alignItems: "center" }}
+            onPress={handlePayment}
+          >
             <Text
               style={{
                 backgroundColor: "#F75428",
@@ -103,5 +202,3 @@ const PaymentScreen = () => {
 };
 
 export default PaymentScreen;
-
-const styles = StyleSheet.create({});

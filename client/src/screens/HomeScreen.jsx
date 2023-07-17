@@ -102,7 +102,7 @@ const HomeScreen = () => {
         >
           <Text
             style={{
-              backgroundColor: user_info?.payment_status
+              backgroundColor: user_info?.balance >= 0
                 ? "#rgb(42,177,166)"
                 : "#F75428",
               paddingVertical: 15,
@@ -112,7 +112,7 @@ const HomeScreen = () => {
               color: "#fff",
             }}
           >
-            {user_info?.payment_status ? "Paid" : "Not Paid"}
+            {user_info?.balance >= 0 ? "Paid" : "Not Paid"}
           </Text>
         </TouchableOpacity>
       </View>

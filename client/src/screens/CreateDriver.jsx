@@ -34,7 +34,7 @@ const CreateDriver = () => {
   const [dNumber, setDNumber] = useState("");
   const [vNumber, setVNumber] = useState("");
   const [vModel, setVModel] = useState("");
-  const [rent, setRent] = useState(0);
+  const [rent, setRent] = useState("");
   const [aadharFront, setAadharFront] = useState(null);
   const [aadharBack, setAadharBack] = useState(null);
   const [dLFront, setDLFront] = useState(null);
@@ -173,7 +173,7 @@ const CreateDriver = () => {
         dNumber: "+91 " + dNumber,
         vNumber,
         vModel,
-        rent,
+        rent: +rent,
       };
       const response = await fetch(`${API_URL}/api/auth/createDriver`, {
         method: "POST",

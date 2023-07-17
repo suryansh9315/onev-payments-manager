@@ -34,13 +34,6 @@ const items = [
     color: "#FE7896",
     type: "octicons",
   },
-  {
-    icon: "settings",
-    label: "Settings",
-    screen: "Settings",
-    color: "#rgb(58,43,158)",
-    type: "",
-  },
 ];
 
 const CustomDrawer = (props) => {

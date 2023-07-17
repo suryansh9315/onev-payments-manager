@@ -10,7 +10,6 @@ const DriverDoc = ({ item }) => {
     { url: item?.dlFrontURL, label: "DL Front" },
     { url: item?.dlBackURL, label: "DL Back" },
   ];
-  console.log(imageLinks);
 
   return (
     <View style={{ gap: 20 }}>

@@ -30,10 +30,10 @@ const OtpScreen = ({ navigation }) => {
     setValue,
   });
 
-  const storeData = async (token, userr) => {
+  const storeData = async (token) => {
     try {
       const object = {
-        isAdmin, phone, token, userr
+        isAdmin, phone, token
       }
       const jsonValue = JSON.stringify(object);
       await AsyncStorage.setItem('user_info', jsonValue);
@@ -67,7 +67,7 @@ const OtpScreen = ({ navigation }) => {
       if (response.status === 200) {
         setToken(json.token);
         setUser(json.user)
-        storeData(json.token, json.user)
+        storeData(json.token)
         setLoading(false)
       } else {
         setLoading(false)

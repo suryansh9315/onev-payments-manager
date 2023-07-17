@@ -315,7 +315,7 @@ const ListItemHome = ({ item }) => {
                   payment status
                 </Text>
                 <Text style={{ fontSize: 20, fontWeight: "600" }}>
-                  {item?.payment_status ? "Paid" : "Not Paid"}
+                  {item?.balance >= 0 ? "Paid" : "Not Paid"}
                 </Text>
               </View>
             </View>

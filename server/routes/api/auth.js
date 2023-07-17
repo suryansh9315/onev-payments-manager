@@ -161,7 +161,7 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
     date: Date.now(),
     admin_name: req.manager.name,
     admin_number: req.manager.number,
-    Paid: 0
+    Paid: 0,
   };
   const newDriver = await drivers.insertOne(driverObject);
   res.status(200).json({
@@ -170,8 +170,35 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
   });
 });
 
-app.post("/checkToken", verifyToken, (req, res) => {
-  res.status(200).json({ status: "success", message: "Token Valid." });
+app.post("/checkToken", verifyToken, async (req, res) => {
+  if (!req.body.phone || !req.body.isAdmin) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Missing fields..." });
+  }
+  const query = { dNumber: req.body.phone };
+  let user;
+  if (req.body.isAdmin) {
+    const manager = await managers.findOne(query);
+    if (!manager) {
+      return res.status(401).json({
+        status: "failure",
+        message: "Manager doesn't exists.",
+      });
+    }
+    user = manager
+  } else {
+    const driver = await drivers.findOne(query);
+    if (!driver) {
+      return res.status(401).json({
+        status: "failure",
+        message: "Driver doesn't exists.",
+      });
+    }
+    user = driver
+  }
+
+  res.status(200).json({ status: "success", message: "Token Valid.", user });
 });
 
 app.post("/getDriver", verifyToken, verifyManager, async (req, res) => {
@@ -217,17 +244,17 @@ app.post("/updatePayStatus", verifyToken, verifyManager, async (req, res) => {
   if (!oldDriver) {
     return res.status(401).json({
       status: "failure",
-      message: "Driver doesn't exists."
+      message: "Driver doesn't exists.",
     });
   }
-  const old_payment_status = oldDriver.payment_status
-  const old_balance = oldDriver.balance
-  const rent = oldDriver.rent
-  let new_balance = old_balance
+  const old_payment_status = oldDriver.payment_status;
+  const old_balance = oldDriver.balance;
+  const rent = oldDriver.rent;
+  let new_balance = old_balance;
   if (old_payment_status) {
-    new_balance -= rent
+    new_balance -= rent;
   } else {
-    new_balance += rent
+    new_balance += rent;
   }
   const update = {
     $set: {
@@ -245,7 +272,7 @@ app.post("/updatePayStatus", verifyToken, verifyManager, async (req, res) => {
   }
   res.status(401).json({
     status: "failure",
-    message: "Something went wrong."
+    message: "Something went wrong.",
   });
 });
 

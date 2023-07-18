@@ -63,7 +63,6 @@ const OtpScreen = ({ navigation }) => {
         }
       );
       const json = await response.json();
-      console.log(json)
       if (response.status === 200) {
         setToken(json.token);
         setUser(json.user)

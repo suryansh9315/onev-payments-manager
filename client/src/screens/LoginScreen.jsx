@@ -84,19 +84,8 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      await SplashScreen.hideAsync();
-    }
-  };
-
   useEffect(() => {
     getData();
-    // clearAll()
   }, []);
 
   const requestOtp = async () => {
@@ -118,7 +107,6 @@ const LoginScreen = ({ navigation }) => {
         }
       );
       const json = await response.json();
-      console.log(json);
       if (response.status === 200) {
         navigation.navigate("Otp");
         setLoading(false);

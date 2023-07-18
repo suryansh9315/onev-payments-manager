@@ -10,9 +10,9 @@ import { Icon, Input } from "@rneui/themed";
 import FilterAccordion from "../components/FilterAccordion";
 import SortAccordion from "../components/SortAccordion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from '@env'
+import { API_URL } from "@env";
 
-console.log(API_URL.substring(0,0))
+console.log(API_URL.substring(0, 0));
 
 const DriversScreen = () => {
   const isFocused = useIsFocused();
@@ -23,7 +23,7 @@ const DriversScreen = () => {
   const [userr, setUser] = useRecoilState(user);
   const [phone, setPhone] = useRecoilState(number);
   const [loading, setLoading] = useState(true);
-  const [reload, setReload] = useState(false)
+  const [reload, setReload] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
   const deleteData = async () => {
@@ -45,19 +45,16 @@ const DriversScreen = () => {
   const fetchAllDrivers = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `${API_URL}/api/auth/getAllDrivers`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/auth/getAllDrivers`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+        }),
+      });
       const json = await response.json();
       if (response.status === 400) {
         alert(`${json.message}`);
@@ -87,7 +84,9 @@ const DriversScreen = () => {
   };
 
   useEffect(() => {
-    fetchAllDrivers();
+    if (isFocused) {
+      fetchAllDrivers();
+    }
   }, [isFocused, reload]);
 
   if (loading) {
@@ -145,7 +144,12 @@ const DriversScreen = () => {
           data={filteredDrivers}
           renderItem={({ item }) => (
             <>
-              <DriverAccordion driver={item} logout={logout} setReload={setReload} reload={reload} />
+              <DriverAccordion
+                driver={item}
+                logout={logout}
+                setReload={setReload}
+                reload={reload}
+              />
             </>
           )}
           keyExtractor={(item) => item.dNumber}

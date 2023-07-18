@@ -187,7 +187,6 @@ const CreateDriver = () => {
         }),
       });
       const json = await response.json();
-      console.log(json);
       if (response.status === 400) {
         setLoading(false);
         return alert(`${json.message}`);

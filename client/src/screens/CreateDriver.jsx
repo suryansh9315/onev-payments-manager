@@ -14,13 +14,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon, Input } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../firebaseConfig";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytes,
-} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import Loader from "../components/Loader";
 import { API_URL } from "@env";
+import { useNavigation } from "@react-navigation/native";
 
 console.log(API_URL?.substring(0, 0));
 
@@ -41,6 +38,7 @@ const CreateDriver = () => {
   const [dLBack, setDLBack] = useState(null);
   const [rCFront, setRCFront] = useState(null);
   const [rCBack, setRCBack] = useState(null);
+  const navigation = useNavigation()
 
   const pickImage = async (setImage) => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -156,7 +154,10 @@ const CreateDriver = () => {
       const dlBackRef = ref(storage, `drivers/${dNumber}/dlBack`);
       const rcFrontRef = ref(storage, `drivers/${dNumber}/rcFront`);
       const rcBackRef = ref(storage, `drivers/${dNumber}/rcBack`);
-      const aadharFrontURL = await uploadImageAsync(aadharFront, aadharFrontRef);
+      const aadharFrontURL = await uploadImageAsync(
+        aadharFront,
+        aadharFrontRef
+      );
       const aadharBackURL = await uploadImageAsync(aadharBack, aadharBackRef);
       const dlFrontURL = await uploadImageAsync(dLFront, dlFrontRef);
       const dlBackURL = await uploadImageAsync(dLBack, dlBackRef);
@@ -187,7 +188,6 @@ const CreateDriver = () => {
         }),
       });
       const json = await response.json();
-      console.log(json);
       if (response.status === 400) {
         setLoading(false);
         return alert(`${json.message}`);
@@ -236,6 +236,42 @@ const CreateDriver = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.containerWrapper}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: 20
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Icon
+                name="menu-unfold"
+                type="antdesign"
+                size={32}
+                style={{
+                  height: 40,
+                  width: 40,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </TouchableOpacity>
+            <Text style={{ fontSize: 22, fontWeight: "400" }}>Create Driver</Text>
+            <View style={{ opacity: 0 }}>
+              <Icon
+                name="menu-unfold"
+                type="antdesign"
+                size={32}
+                style={{
+                  height: 40,
+                  width: 40,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+            </View>
+          </View>
           <View style={styles.profileContainer}>
             <View>
               <Text style={{ fontSize: 22 }}>{userr?.name}</Text>

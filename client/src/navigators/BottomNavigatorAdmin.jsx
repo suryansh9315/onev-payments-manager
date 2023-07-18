@@ -1,58 +1,23 @@
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import AllHistory from '../screens/AllHistory'
 import CreateDriver from '../screens/CreateDriver'
 import DriversScreen from '../screens/DriversScreen'
-import Octicons from "@expo/vector-icons/Octicons";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useTheme } from "react-native-paper";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import CustomDrawerAdmin from "../components/CustomDrawerAdmin";
 
-const Tab = createMaterialBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const BottomNavigator = () => {
-  const theme = useTheme();
-  theme.colors.secondaryContainer = "transperent";
-
   return (
-    <Tab.Navigator
-      initialRouteName="Drivers"
-      activeColor="#ffffff"
-      inactiveColor="#c3c3c3"
-      barStyle={{ backgroundColor: "#114084" }}
-      shifting={true}
-      backBehavior="initialRoute"
-    >
-      <Tab.Screen
-        name="Drivers"
-        component={DriversScreen}
-        options={{
-          tabBarLabel: "Drivers",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="address-book" size={26} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="CreateDriver"
-        component={CreateDriver}
-        options={{
-          tabBarLabel: "Create",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="adduser" size={28} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="AllHistory"
-        component={AllHistory}
-        options={{
-          tabBarLabel: "History",
-          tabBarIcon: ({ color }) => (
-            <Octicons name="history" size={26} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <Drawer.Navigator
+        initialRouteName="Drivers"
+        backBehavior="initialRoute"
+        screenOptions={{ headerShown: false, drawerStyle: { width: '80%' }}}
+        drawerContent={(props) => <CustomDrawerAdmin {...props} />}
+      >
+        <Drawer.Screen name="Drivers" component={DriversScreen} />
+        <Drawer.Screen name="CreateDriver" component={CreateDriver} />
+        <Drawer.Screen name="AllHistory" component={AllHistory} />
+      </Drawer.Navigator>
   );
 };
 

@@ -111,29 +111,35 @@ const PaymentScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TouchableOpacity
-        onPress={() => navigation.openDrawer()}
+      <View
         style={{
           position: "absolute",
           zIndex: 1000,
           top,
           left: 0,
           paddingHorizontal: 20,
-          paddingVertical: 20,
+          paddingVertical: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
         }}
       >
-        <Icon
-          name="menu-unfold"
-          type="antdesign"
-          size={36}
-          style={{
-            height: 50,
-            width: 50,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Icon
+            name="menu-unfold"
+            type="antdesign"
+            size={32}
+            style={{
+              height: 40,
+              width: 40,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 18, fontWeight: "400" }}>Payment</Text>
+      </View>
       <View
         style={{
           flex: 1,

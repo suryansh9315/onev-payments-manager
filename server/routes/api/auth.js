@@ -176,9 +176,9 @@ app.post("/checkToken", verifyToken, async (req, res) => {
       .status(401)
       .json({ status: "error", message: "Missing fields..." });
   }
-  const query = { dNumber: req.body.phone };
   let user;
   if (req.body.isAdmin) {
+    const query = { number: req.body.phone };
     const manager = await managers.findOne(query);
     if (!manager) {
       return res.status(401).json({
@@ -188,6 +188,7 @@ app.post("/checkToken", verifyToken, async (req, res) => {
     }
     user = manager
   } else {
+    const query = { dNumber: req.body.phone };
     const driver = await drivers.findOne(query);
     if (!driver) {
       return res.status(401).json({
@@ -197,7 +198,6 @@ app.post("/checkToken", verifyToken, async (req, res) => {
     }
     user = driver
   }
-
   res.status(200).json({ status: "success", message: "Token Valid.", user });
 });
 

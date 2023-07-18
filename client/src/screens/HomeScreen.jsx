@@ -58,10 +58,10 @@ const HomeScreen = () => {
         <Icon
           name="menu-unfold"
           type="antdesign"
-          size={36}
+          size={32}
           style={{
-            height: 50,
-            width: 50,
+            height: 40,
+            width: 40,
             alignItems: "center",
             justifyContent: "center",
           }}

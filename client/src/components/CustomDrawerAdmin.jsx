@@ -10,33 +10,33 @@ import DrawerItem from "./DrawerItem";
 import { admin, number, sessionToken, user } from "../atoms/User";
 import { useRecoilState } from "recoil";
 import { Icon } from "@rneui/themed";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const items = [
   {
-    icon: "home",
-    label: "Home",
-    screen: "HomeDriver",
+    icon: "list",
+    label: "Drivers",
+    screen: "Drivers",
     color: "#rgb(42,177,166)",
-    type: "antdesign",
+    type: "ionicons",
   },
   {
-    icon: "payment",
-    label: "Pay",
-    screen: "Payment",
+    icon: "adduser",
+    label: "Create Driver",
+    screen: "CreateDriver",
     color: "#F75428",
-    type: "",
+    type: "antdesign",
   },
   {
     icon: "history",
     label: "History",
-    screen: "History",
+    screen: "AllHistory",
     color: "#FE7896",
     type: "octicons",
   },
 ];
 
-const CustomDrawer = (props) => {
+const CustomDrawerAdmin = (props) => {
   const [user_info, setUser] = useRecoilState(user);
   const [token, setToken] = useRecoilState(sessionToken);
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
@@ -121,7 +121,7 @@ const CustomDrawer = (props) => {
               {user_info?.name}
             </Text>
             <Text style={{ fontWeight: "300", fontSize: 14 }}>
-              {user_info?.dNumber}
+              {user_info?.number}
             </Text>
           </View>
           {items.map((item) => (
@@ -151,4 +151,4 @@ const CustomDrawer = (props) => {
   );
 };
 
-export default CustomDrawer;
+export default CustomDrawerAdmin;

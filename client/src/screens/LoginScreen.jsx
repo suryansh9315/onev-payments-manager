@@ -13,93 +13,18 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { CheckBox } from '@rneui/themed';
 import { useRecoilState } from "recoil";
-import { admin, number, sessionToken, user } from "../atoms/User";
+import { admin, number } from "../atoms/User";
 import Loader from "../components/Loader";
-import { useEffect, useState } from "react";
-import * as SplashScreen from "expo-splash-screen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
 import { API_URL } from '@env' 
 
-SplashScreen.preventAutoHideAsync();
 console.log(API_URL?.substring(0,0))
-
 const height = Dimensions.get("window").height;
 
 const LoginScreen = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
-  const [userr, setUser] = useRecoilState(user);
-  const [token, setToken] = useRecoilState(sessionToken);
   const [loading, setLoading] = useState(false);
-
-  const deleteData = async () => {
-    try {
-      await AsyncStorage.removeItem("user_info");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const logout = () => {
-    deleteData();
-    setToken(null);
-    setIsAdmin(false);
-    setPhone(null);
-    setUser(null);
-  };
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("user_info");
-      if (jsonValue !== null) {
-        const user_info = JSON.parse(jsonValue);
-        const response = await fetch(
-          `${API_URL}/api/auth/checkToken`,
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              token: user_info.token,
-              phone: user_info.phone,
-              isAdmin: user_info.isAdmin
-            }),
-          }
-        );
-        const json = await response.json();
-        if (response.status === 400) {
-          alert(`${json.message}`);
-          logout();
-          return;
-        }
-        setToken(user_info.token);
-        setIsAdmin(user_info.isAdmin);
-        setPhone(user_info.phone);
-        setUser(json.user)
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      await SplashScreen.hideAsync();
-    }
-  };
-
-  const clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      await SplashScreen.hideAsync();
-    }
-  };
-
-  useEffect(() => {
-    getData();
-    // clearAll()
-  }, []);
 
   const requestOtp = async () => {
     if (phone?.length !== 10) return

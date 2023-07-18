@@ -33,7 +33,6 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
         logout();
         return;
       }
-      console.log(json)
       setReload(!reload)
     } catch (error) {
       console.log(error)

@@ -6,11 +6,12 @@ import { useRecoilState } from "recoil";
 import BottomNavigator from "./BottomNavigator";
 import BottomNavigatorAdmin from "./BottomNavigatorAdmin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from '@env' 
+import { API_URL } from "@env";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
 
-console.log(API_URL?.substring(0,0))
+console.log(API_URL?.substring(0, 0));
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ const RootNavigator = () => {
   const [phone, setPhone] = useRecoilState(number);
   const [user_info, setUser] = useRecoilState(user);
   const [token, setToken] = useRecoilState(sessionToken);
+  const [loading, setLoading] = useState(true);
 
   const deleteData = async () => {
     try {
@@ -41,37 +43,35 @@ const RootNavigator = () => {
       const jsonValue = await AsyncStorage.getItem("user_info");
       if (jsonValue !== null) {
         const userr = JSON.parse(jsonValue);
-        const response = await fetch(
-          `${API_URL}/api/auth/checkToken`,
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              token: userr.token,
-              phone: "+91 " + userr.phone,
-              isAdmin: userr.isAdmin
-            }),
-          }
-        );
+        const response = await fetch(`${API_URL}/api/auth/checkToken`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: userr.token,
+            phone: "+91 " + userr.phone,
+            isAdmin: userr.isAdmin,
+          }),
+        });
         const json = await response.json();
         if (response.status === 400) {
           alert(`${json.message}`);
           logout();
           return;
         }
-        console.log(json)
-        setUser(json.user)
+        setUser(json.user);
         setToken(userr.token);
         setIsAdmin(userr.isAdmin);
         setPhone(userr.phone);
+        console.log(user)
       }
     } catch (e) {
       console.log(e);
     } finally {
       await SplashScreen.hideAsync();
+      setLoading(false);
     }
   };
 
@@ -89,6 +89,10 @@ const RootNavigator = () => {
     getData();
     // clearAll()
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Stack.Navigator>

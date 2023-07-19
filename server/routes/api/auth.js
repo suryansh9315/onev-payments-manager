@@ -162,6 +162,7 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
     admin_name: req.manager.name,
     admin_number: req.manager.number,
     Paid: 0,
+    noti_token: ""
   };
   const newDriver = await drivers.insertOne(driverObject);
   res.status(200).json({
@@ -171,7 +172,7 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
 });
 
 app.post("/checkToken", verifyToken, async (req, res) => {
-  if (!req.body.phone || !req.body.isAdmin) {
+  if (!req.body.phone) {
     return res
       .status(401)
       .json({ status: "error", message: "Missing fields..." });

@@ -15,6 +15,8 @@ import Loader from "../components/Loader";
 import { API_URL } from "@env";
 import { sessionToken } from "../atoms/User";
 import { useRecoilValue } from "recoil";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 console.log(API_URL.substring(0, 0));
 const { height } = Dimensions.get("window");
@@ -110,7 +112,7 @@ const AllHistory = () => {
               alignItems: "center",
               justifyContent: "space-between",
               paddingTop: 20,
-              paddingBottom: 10
+              paddingBottom: 10,
             }}
           >
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -218,7 +220,14 @@ const AllHistory = () => {
                     {formatter.format(item?.created_at * 1000)}
                   </Text>
                 </View>
-                <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 5,
+                  }}
+                >
                   <Text
                     style={{
                       fontSize: 15,
@@ -227,6 +236,11 @@ const AllHistory = () => {
                   >
                     &#8377;{item?.amount / 100}
                   </Text>
+                  {item?.type === "Cash" ? (
+                    <Ionicons name="cash-outline" size={18} color="black" />
+                  ) : (
+                    <AntDesign name="creditcard" size={16} color="black" />
+                  )}
                 </View>
               </TouchableOpacity>
             ))}

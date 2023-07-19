@@ -3,6 +3,8 @@ const dotenv = require("dotenv").config();
 
 const url = process.env.MONGO_URI;
 const mongoClient = new MongoClient(url);
+const database = mongoClient.db("onev");
+const drivers = database.collection("drivers");
 
 const connectDb = async () => {
   try {
@@ -13,4 +15,17 @@ const connectDb = async () => {
   }
 };
 
-module.exports = { connectDb, mongoClient };
+const resetDriverBalance = async () => {
+  const filter = {};
+  const updatePipeline = [
+    {
+      $set: {
+        balance: { $subtract: ["$balance", "$rent"] }
+      },
+    },
+  ];
+  const result = await drivers.updateMany(filter, updatePipeline);
+  console.log(`Updated ${result.modifiedCount} documents`);
+};
+
+module.exports = { connectDb, mongoClient, resetDriverBalance };

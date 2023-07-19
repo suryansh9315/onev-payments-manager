@@ -279,12 +279,12 @@ const CreateDriver = () => {
                 {userr?.number}
               </Text>
             </View>
-            <TouchableOpacity onPress={logout}>
+            <View>
               <Image
                 source={require("../../assets/Profile.png")}
                 style={{ height: 70, width: 70 }}
               />
-            </TouchableOpacity>
+            </View>
           </View>
           <Text style={styles.heading}>Add New Driver</Text>
           <View style={styles.inputContainer}>
@@ -426,6 +426,7 @@ const CreateDriver = () => {
                 inputContainerStyle={{
                   borderWidth: 1,
                   paddingHorizontal: 10,
+                  borderColor: aadharFront ? "#07db00" : "#ff0000"
                 }}
                 inputStyle={{ fontSize: 16 }}
               />
@@ -469,6 +470,7 @@ const CreateDriver = () => {
                 inputContainerStyle={{
                   borderWidth: 1,
                   paddingHorizontal: 10,
+                  borderColor: aadharBack ? "#07db00" : "#ff0000"
                 }}
                 inputStyle={{ fontSize: 16 }}
               />
@@ -514,6 +516,7 @@ const CreateDriver = () => {
                 inputContainerStyle={{
                   borderWidth: 1,
                   paddingHorizontal: 10,
+                  borderColor: dLFront ? "#07db00" : "#ff0000"
                 }}
                 inputStyle={{ fontSize: 16 }}
               />
@@ -557,6 +560,7 @@ const CreateDriver = () => {
                 inputContainerStyle={{
                   borderWidth: 1,
                   paddingHorizontal: 10,
+                  borderColor: dLBack ? "#07db00" : "#ff0000"
                 }}
                 inputStyle={{ fontSize: 16 }}
               />
@@ -602,6 +606,7 @@ const CreateDriver = () => {
                 inputContainerStyle={{
                   borderWidth: 1,
                   paddingHorizontal: 10,
+                  borderColor: rCFront ? "#07db00" : "#ff0000"
                 }}
                 inputStyle={{ fontSize: 16 }}
               />
@@ -645,6 +650,7 @@ const CreateDriver = () => {
                 inputContainerStyle={{
                   borderWidth: 1,
                   paddingHorizontal: 10,
+                  borderColor: rCBack ? "#07db00" : "#ff0000"
                 }}
                 inputStyle={{ fontSize: 16 }}
               />
@@ -667,6 +673,7 @@ const styles = StyleSheet.create({
   containerWrapper: {
     paddingHorizontal: 20,
     paddingVertical: 20,
+    backgroundColor: '#fff'
   },
   heading: {
     fontSize: 26,
@@ -678,7 +685,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: 10,
+    marginTop: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
     width: "100%",

@@ -1,44 +1,49 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { ListItem, Icon } from "@rneui/themed";
+import { ListItem, Icon, Input } from "@rneui/themed";
 import { sessionToken } from "../atoms/User";
 import { useRecoilValue } from "recoil";
-import { API_URL } from '@env'
+import { API_URL } from "@env";
 
-console.log(API_URL?.substring(0,0))
+console.log(API_URL?.substring(0, 0));
 
-const DriverAccordion = ({ driver, logout, setReload, reload }) => {
+const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
   const [expanded, setExpanded] = useState(false);
   const token = useRecoilValue(sessionToken);
+  const [cash, setCash] = useState("");
 
   const handlePaymentUpdate = async () => {
+    if (cash < 500) {
+      return alert("Cash Deposits of less than 500 are not allowed.");
+    }
+    setLoading(true);
     try {
-      const response = await fetch(
-        `${API_URL}/api/auth/updatePayStatus`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token,
-            dNumber: driver.dNumber
-          }),
-        }
-      );
-      const json = await response.json()
-      alert(`${json.message}`)
+      const response = await fetch(`${API_URL}/api/orders/createCashOrder`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          driver_id: driver._id,
+          amount: cash,
+        }),
+      });
+      const json = await response.json();
+      alert(`${json.message}`);
       if (response.status === 400) {
         logout();
         return;
       }
-      setReload(!reload)
+      setReload(!reload);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       alert("Something went wrong...");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <ListItem.Accordion
@@ -54,10 +59,10 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
               {driver?.dNumber}
             </ListItem.Subtitle>
           </ListItem.Content>
-          {driver?.payment_status ? (
-            <Icon type="antdesign" name="checkcircle" color="#4aaf4f" onPress={handlePaymentUpdate} />
+          {driver?.balance >= 0 ? (
+            <Icon type="antdesign" name="checkcircle" color="#4aaf4f" />
           ) : (
-            <Icon type="antdesign" name="closecircle" color="#f44336" onPress={handlePaymentUpdate} />
+            <Icon type="antdesign" name="closecircle" color="#f44336" />
           )}
         </>
       }
@@ -67,7 +72,15 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
       }}
     >
       <View
-        style={{ backgroundColor: "#fff", width: "100%", padding: 20, gap: 20 }}
+        style={{
+          backgroundColor: "#fff",
+          width: "100%",
+          padding: 20,
+          paddingBottom: 30,
+          gap: 20,
+          borderBottomRightRadius: 5,
+          borderBottomLeftRadius: 5,
+        }}
       >
         <View
           style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
@@ -205,23 +218,43 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
             </Text>
           </View>
         </View>
+        <View style={{ marginTop: 10 }}>
+          <Input
+            onChangeText={(e) => setCash(+e)}
+            keyboardType="numeric"
+            value={cash}
+            placeholder="Enter Cash Amount"
+            errorStyle={{ display: "none" }}
+            inputContainerStyle={{
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              backgroundColor: "#fff",
+              borderRadius: 4,
+              borderWidth: 1,
+              borderColor: "#bbbbbb",
+            }}
+            inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
+          />
+        </View>
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-around",
             width: "100%",
-            marginTop: 10,
           }}
         >
-          <TouchableOpacity style={{ width: 140 }}>
+          <TouchableOpacity
+            style={{ width: 140 }}
+            onPress={handlePaymentUpdate}
+          >
             <Text
               style={{
                 backgroundColor: "#ffae00",
                 color: "#fff",
                 textAlign: "center",
                 paddingVertical: 10,
-                borderRadius: 4
+                borderRadius: 4,
               }}
             >
               Update
@@ -234,7 +267,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
                 paddingVertical: 10,
                 color: "#fff",
                 textAlign: "center",
-                borderRadius: 4
+                borderRadius: 4,
               }}
             >
               Delete
@@ -247,5 +280,3 @@ const DriverAccordion = ({ driver, logout, setReload, reload }) => {
 };
 
 export default DriverAccordion;
-
-const styles = StyleSheet.create({});

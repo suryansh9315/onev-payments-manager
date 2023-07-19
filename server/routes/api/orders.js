@@ -46,6 +46,7 @@ app.post("/createOrder", verifyToken, verifyDriver, async (req, res) => {
       razorpay_payment_id: "",
       razorpay_order_id: "",
       razorpay_signature: "",
+      type: "Online",
     };
     const newOrder = await orders.insertOne(order_object);
     res
@@ -60,6 +61,64 @@ app.get("/fetchAllOrders", verifyToken, verifyManager, async (req, res) => {
   try {
     const response = await instance.orders.all();
     res.status(200).json({ orders: response });
+  } catch (error) {
+    res.status(400).json({ message: error?.error?.description });
+  }
+});
+
+app.post("/createCashOrder", verifyToken, verifyManager, async (req, res) => {
+  if (
+    !req.body.amount ||
+    typeof req.body.amount !== "number" ||
+    req.body.amount <= 1 ||
+    !req.body.driver_id
+  ) {
+    return res.status(401).json({ message: "Missing Fields" });
+  }
+  const driver_query = { _id: new ObjectId(req.body.driver_id) };
+  const oldDriver = await drivers.findOne(driver_query);
+  const amount = req.body.amount * 100;
+  const receipt = oldDriver._id + "_" + Date.now();
+  const txnId =
+    oldDriver._id +
+    "_" +
+    Date.now() +
+    "_" +
+    crypto.randomBytes(8).toString("hex");
+  try {
+    const order_object = {
+      entity: "order",
+      amount,
+      amount_paid: amount,
+      amount_due: 0,
+      currency: "INR",
+      receipt,
+      status: "Paid",
+      created_at: new Date().valueOf() / 1000,
+      driver_id: oldDriver._id,
+      txnId,
+      type: "Cash",
+    };
+    const newOrder = await orders.insertOne(order_object);
+    const options = { upsert: false };
+    const driver_update = {
+      $set: {
+        balance: oldDriver.balance + req.body.amount,
+        Paid: oldDriver.Paid + req.body.amount,
+      },
+    };
+    const result_driver = await drivers.updateOne(
+      driver_query,
+      driver_update,
+      options
+    );
+    if (result_driver.matchedCount !== result_driver.modifiedCount) {
+      return res.status(401).json({
+        status: "failure",
+        message: "Something went wrong.",
+      });
+    }
+    res.status(200).json({ message: "Order created successfully." });
   } catch (error) {
     res.status(400).json({ message: error?.error?.description });
   }
@@ -158,6 +217,7 @@ app.post(
           {
             $match: {
               driver_id: new ObjectId(req.driver._id),
+              status: "Paid",
               created_at: {
                 $gte: (new Date().valueOf() - 2678400000 * (i + 1)) / 1000,
                 $lt: (new Date().valueOf() - 2678400000 * i) / 1000,
@@ -218,6 +278,7 @@ app.post("/fetchLast6Earn", verifyToken, verifyManager, async (req, res) => {
       const aggre = orders.aggregate([
         {
           $match: {
+            status: "Paid",
             created_at: {
               $gte: (new Date().valueOf() - 2678400000 * (i + 1)) / 1000,
               $lt: (new Date().valueOf() - 2678400000 * i) / 1000,

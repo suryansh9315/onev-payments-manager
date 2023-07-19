@@ -1,4 +1,11 @@
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { admin, number, sessionToken, user } from "../atoms/User";
@@ -25,7 +32,7 @@ const DriversScreen = () => {
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const deleteData = async () => {
     try {
@@ -119,9 +126,7 @@ const DriversScreen = () => {
               }}
             />
           </TouchableOpacity>
-          <Text style={{ fontSize: 22, fontWeight: "400" }}>
-            Drivers
-          </Text>
+          <Text style={{ fontSize: 22, fontWeight: "400" }}>Drivers</Text>
           <View style={{ opacity: 0 }}>
             <Icon
               name="menu-unfold"
@@ -149,7 +154,7 @@ const DriversScreen = () => {
             errorStyle={{ display: "none" }}
             inputContainerStyle={{
               paddingHorizontal: 15,
-              paddingVertical: 4,
+              paddingVertical: 0,
               backgroundColor: "#fff",
               borderRadius: 10,
               borderWidth: 1,
@@ -158,7 +163,7 @@ const DriversScreen = () => {
             inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -170,7 +175,7 @@ const DriversScreen = () => {
             <FilterAccordion />
             <SortAccordion />
           </View>
-        </View>
+        </View> */}
       </View>
       <View
         style={{
@@ -185,6 +190,7 @@ const DriversScreen = () => {
           renderItem={({ item }) => (
             <>
               <DriverAccordion
+                setLoading={setLoading}
                 driver={item}
                 logout={logout}
                 setReload={setReload}
@@ -201,5 +207,3 @@ const DriversScreen = () => {
 };
 
 export default DriversScreen;
-
-const styles = StyleSheet.create({});

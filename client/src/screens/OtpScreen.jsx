@@ -11,11 +11,11 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '@env'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
 
 const CELL_COUNT = 4;
-console.log(API_URL?.substring(0,0))
+console.log(API_URL?.substring(0, 0));
 
 const OtpScreen = ({ navigation }) => {
   const isAdmin = useRecoilValue(admin);
@@ -23,7 +23,7 @@ const OtpScreen = ({ navigation }) => {
   const [token, setToken] = useRecoilState(sessionToken);
   const [userr, setUser] = useRecoilState(user);
   const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -33,43 +33,42 @@ const OtpScreen = ({ navigation }) => {
   const storeData = async (token) => {
     try {
       const object = {
-        isAdmin, phone, token
-      }
+        isAdmin,
+        phone,
+        token,
+      };
       const jsonValue = JSON.stringify(object);
-      await AsyncStorage.setItem('user_info', jsonValue);
-      console.log("User stored in Async Storage.")
+      await AsyncStorage.setItem("user_info", jsonValue);
+      console.log("User stored in Async Storage.");
     } catch (e) {
-      console.log("Async Storage not working.")
+      console.log("Async Storage not working.");
     }
   };
 
   const handleOTPSubmit = async () => {
-    if (value?.length !== 4) return
+    if (value?.length !== 4) return;
     try {
-      setLoading(true)
-      const response = await fetch(
-        `${API_URL}/api/auth/verifyOtp`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            number: "+91 " + phone,
-            otp: value,
-            isManager: isAdmin,
-          }),
-        }
-      );
+      setLoading(true);
+      const response = await fetch(`${API_URL}/api/auth/verifyOtp`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          number: "+91 " + phone,
+          otp: value,
+          isManager: isAdmin,
+        }),
+      });
       const json = await response.json();
       if (response.status === 200) {
         setToken(json.token);
-        setUser(json.user)
-        storeData(json.token)
-        setLoading(false)
+        setUser(json.user);
+        storeData(json.token);
+        setLoading(false);
       } else {
-        setLoading(false)
+        setLoading(false);
         alert("Something went wrong...");
       }
     } catch (error) {
@@ -81,7 +80,7 @@ const OtpScreen = ({ navigation }) => {
   };
 
   if (loading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
@@ -100,9 +99,7 @@ const OtpScreen = ({ navigation }) => {
         <View style={styles.contentContainer}>
           <Text style={{ fontSize: 30 }}>OTP Verification</Text>
           <Text>One Time Password (OTP) has been sent to this number</Text>
-          <Text style={{ fontWeight: "600", fontSize: 16 }}>
-            +91 {phone}
-          </Text>
+          <Text style={{ fontWeight: "600", fontSize: 16 }}>+91 {phone}</Text>
           <View style={styles.inputContainer}>
             <CodeField
               ref={ref}

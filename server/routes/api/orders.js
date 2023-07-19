@@ -315,48 +315,4 @@ app.post("/fetchLast6Earn", verifyToken, verifyManager, async (req, res) => {
   }
 });
 
-// app.post("/fetchOrderById", async (req, res) => {
-//   if (!req.body.orderId) {
-//     return res.status(400).json({ message: "Missing Fields" });
-//   }
-//   try {
-//     const orderId = req.body.orderId;
-//     const response = await instance.orders.fetch(orderId);
-//     res.status(200).json({ order: response });
-//   } catch (error) {
-//     res.status(400).json({ message: error?.error?.description });
-//   }
-// });
-
-// app.post("/fetchPaymentsOfOrder", async (req, res) => {
-//   if (!req.body.orderId) {
-//     return res.status(400).json({ message: "Missing Fields" });
-//   }
-//   try {
-//     const orderId = req.body.orderId;
-//     const response = await instance.orders.fetchPayments(orderId);
-//     res.status(200).json({ order: response });
-//   } catch (error) {
-//     res.status(400).json({ message: error?.error?.description });
-//   }
-// });
-
-// app.post("/updateOrder", async (req, res) => {
-//   if (!req.body.orderId) {
-//     return res.status(400).json({ message: "Missing Fields" });
-//   }
-//   try {
-//     const orderId = req.body.orderId;
-//     const response = await instance.orders.edit(orderId, {
-//       notes: {
-//         key1: "value3",
-//         key2: "value2",
-//       },
-//     });
-//     res.status(200).json({ order: response });
-//   } catch (error) {
-//     res.status(400).json({ message: error?.error?.description });
-//   }
-// });
-
 module.exports = app;

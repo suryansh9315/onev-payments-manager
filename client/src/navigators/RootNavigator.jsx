@@ -10,10 +10,48 @@ import { API_URL } from "@env";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 
 console.log(API_URL?.substring(0, 0));
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+  return token;
+}
 
 const RootNavigator = () => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
@@ -61,11 +99,28 @@ const RootNavigator = () => {
           logout();
           return;
         }
+        if( !userr.isAdmin){
+          const noti_token = await registerForPushNotificationsAsync()
+          console.log(noti_token)
+          if (noti_token) {
+            json.user.noti_token = noti_token
+            const nRes = await fetch(`${API_URL}/api/notification/addNotiToken`, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                token: userr.token,
+                noti_token
+              }),
+            });
+          }
+        }
         setUser(json.user);
         setToken(userr.token);
         setIsAdmin(userr.isAdmin);
         setPhone(userr.phone);
-        console.log(user)
       }
     } catch (e) {
       console.log(e);

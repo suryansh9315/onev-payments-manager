@@ -10,14 +10,14 @@ const app = express.Router();
 app.post("/addNotiToken", verifyToken, verifyDriver, async (req, res) => {
   if (!req.body.noti_token) {
     return res
-      .status(400)
+      .status(401)
       .json({ status: "error", message: "Missing fields..." });
   }
   const query = { dNumber: req.driver.dNumber };
   const options = { upsert: false };
   const update = {
     $set: {
-      noti_token,
+      noti_token: req.body.noti_token,
     },
   };
   const result = await drivers.updateOne(query, update, options);

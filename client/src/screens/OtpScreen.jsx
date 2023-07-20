@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   inputContainer: {
-    backgroundColor: "#114084",
+    backgroundColor: "#0051c3",
     borderRadius: 10,
     marginVertical: 10,
   },

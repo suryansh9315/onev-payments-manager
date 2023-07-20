@@ -111,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
             </View>
             <View
               style={{
-                backgroundColor: "#114084",
+                backgroundColor: "#0051c3",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "flex-end",
@@ -127,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
                   borderWidth: 0,
                   padding: 0,
                   margin: 0,
-                  backgroundColor: '#114084',
+                  backgroundColor: '#0051c3',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   inputContainer: {
-    backgroundColor: "#114084",
+    backgroundColor: "#0051c3",
     alignItems: "center",
     justifyContent: "center",
     minHeight: (1 / 3) * height,

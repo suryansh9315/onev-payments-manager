@@ -8,8 +8,8 @@ rule.minute = 0;
 rule.tz = "Asia/Calcutta";
 
 const noti_rule = new schedule.RecurrenceRule();
-noti_rule_2.hour = 12;
-noti_rule_2.minute = 0;
+noti_rule.hour = 12;
+noti_rule.minute = 0;
 noti_rule.tz = "Asia/Calcutta";
 
 const noti_rule_2 = new schedule.RecurrenceRule();

@@ -9,7 +9,7 @@ const sendNotification = async () => {
   let messages = [];
   const result = drivers.find();
   for await (const doc of result) {
-    if (Expo.isExpoPushToken(doc.noti_token) && doc.balance < 4000) {
+    if (Expo.isExpoPushToken(doc.noti_token) && doc.balance < 6000) {
       messages.push({
         to: doc.noti_token,
         sound: "default",

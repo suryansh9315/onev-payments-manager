@@ -46,7 +46,7 @@ const SideLay = ({ values, graphOffset, heightG }) => {
     >
       {values.map((value, i) => (
         <View key={i}>
-          <Text>{+value < 1000 ? +value : +value / 1000}k</Text>
+          <Text style={{ textAlign: 'center' }}>{+value < 1000 ? +value : +value / 1000 + "k"}</Text>
         </View>
       ))}
     </View>

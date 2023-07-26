@@ -6,7 +6,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@rneui/themed";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import HistoryGraph from "../components/HistoryGraph";
@@ -86,10 +86,6 @@ const AllHistory = () => {
   }, [isFocused]);
 
   if (loading) {
-    return <Loader />;
-  }
-
-  if (!orders || !allTimeEarn) {
     return <Loader />;
   }
 

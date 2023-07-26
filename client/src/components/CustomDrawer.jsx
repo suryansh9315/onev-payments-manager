@@ -10,7 +10,8 @@ import DrawerItem from "./DrawerItem";
 import { admin, number, sessionToken, user } from "../atoms/User";
 import { useRecoilState } from "recoil";
 import { Icon } from "@rneui/themed";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const items = [
   {
@@ -42,6 +43,7 @@ const CustomDrawer = (props) => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
   const { height } = useWindowDimensions();
+  const { top } = useSafeAreaInsets();
 
   const deleteData = async () => {
     try {
@@ -62,7 +64,6 @@ const CustomDrawer = (props) => {
   return (
     <DrawerContentScrollView
       {...props}
-      style={{ backgroundColor: "rgba(0, 0, 0, 1)" }}
     >
       <View
         style={{
@@ -70,15 +71,16 @@ const CustomDrawer = (props) => {
           zIndex: 1000,
           width: "100%",
           alignItems: "center",
-          top: 70,
+          top: 80,
         }}
       >
         <Image
-          source={require("../../assets/Profile.png")}
+          source={{ uri: user_info?.profilePic?.url }}
           style={{
-            height: 120,
-            width: 120,
+            height: 100,
+            width: 100,
             zIndex: 1000,
+            borderRadius: 60,
           }}
         />
       </View>
@@ -95,7 +97,7 @@ const CustomDrawer = (props) => {
           }}
         />
       </View>
-      <View style={{ height: height - 134, backgroundColor: "white" }}>
+      <View style={{ height: 350, backgroundColor: "white" }}>
         <View
           style={{
             backgroundColor: "#000",

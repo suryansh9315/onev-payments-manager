@@ -89,10 +89,6 @@ const HistoryScreen = () => {
     return <Loader />;
   }
 
-  if (!orders || !allTimeSpent) {
-    return <Loader />;
-  }
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>

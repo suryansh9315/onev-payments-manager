@@ -1,16 +1,16 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import React, { useEffect, useRef } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const Loader = () => {
-  const loaderAnimationRef = useRef(null);
+const Transition = () => {
+  const tranAnimationRef = useRef(null);
   const {height, width} = useWindowDimensions();
 
   useEffect(() => {
-    loaderAnimationRef.current?.play();
+    tranAnimationRef.current?.play();
     return () => {
-      loaderAnimationRef.current?.reset();
+      tranAnimationRef.current?.reset();
     };
   }, []);
 
@@ -18,20 +18,21 @@ const Loader = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <LottieView
-          ref={loaderAnimationRef}
+          ref={tranAnimationRef}
           style={{
-            width: 200,
-            height: 200,
+            width: width,
+            height: height,
           }}
           resizeMode="cover"
-          source={require("../animations/loader.json")}
+          source={require("../animations/transition.json")}
+          loop={false}
         />
       </View>
     </SafeAreaView>
   );
 };
 
-export default Loader;
+export default Transition;
 
 const styles = StyleSheet.create({
   container: {

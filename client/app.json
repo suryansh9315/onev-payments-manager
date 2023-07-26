@@ -1,14 +1,12 @@
 {
   "expo": {
-    "name": "Onev Payments",
+    "name": "Paycol",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/paycol.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo.png",
-      "resizeMode": "contain",
       "backgroundColor": "#0051c3"
     },
     "assetBundlePatterns": ["**/*"],
@@ -17,11 +15,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/paycol.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.mautkadevta.onevpayments",
+      "package": "com.mautkadevta.paycol",
+      "versionCode": 1,
       "googleServicesFile": "./google-services.json"
     },
     "web": {

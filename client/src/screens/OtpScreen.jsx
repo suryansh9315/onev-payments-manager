@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -49,7 +55,7 @@ async function registerForPushNotificationsAsync() {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
+      lightColor: "#0051c3",
     });
   }
   return token;
@@ -101,9 +107,9 @@ const OtpScreen = ({ navigation }) => {
       });
       const json = await response.json();
       if (response.status === 200) {
-        if ( !isAdmin) {
+        if (!isAdmin) {
           const noti_token = await registerForPushNotificationsAsync();
-          console.log(noti_token)
+          console.log(noti_token);
           if (noti_token) {
             json.user.noti_token = noti_token;
             const nRes = await fetch(
@@ -135,6 +141,35 @@ const OtpScreen = ({ navigation }) => {
       console.error(error);
     } finally {
       setValue("");
+    }
+  };
+
+  const requestOtp = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          number: "+91 " + phone,
+          isManager: isAdmin,
+        }),
+      });
+      const json = await response.json();
+      console.log(json);
+      if (response.status === 200) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+        alert(`${json.message}`);
+      }
+    } catch (error) {
+      setLoading(false);
+      alert("Something went wrong...");
+      console.error(error);
     }
   };
 
@@ -183,7 +218,9 @@ const OtpScreen = ({ navigation }) => {
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text>Didn’t Receive a code ?</Text>
-            <Text style={{ fontWeight: 600 }}> Request Again</Text>
+            <TouchableOpacity onPress={requestOtp}>
+              <Text style={{ fontWeight: 600 }}> Request Again</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.buttonContainer}></View>

@@ -26,7 +26,7 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const handlePayment = async () => {
-    if (payment < 500) return;
+    if (payment < 500) return alert("Online Payments of less than 500 are not allowed.");
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/api/orders/createOrder`, {

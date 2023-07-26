@@ -7,6 +7,7 @@ const client = require("twilio")(
 const { sign_jwt } = require("../../utils/jwt_helpers");
 const { verifyToken, verifyManager } = require("../../middlewares/auth");
 const { mongoClient } = require("../../database");
+const { ObjectId } = require("mongodb");
 
 const database = mongoClient.db("onev");
 const drivers = database.collection("drivers");
@@ -127,17 +128,47 @@ app.post("/verifyOtp", async (req, res) => {
   }
 });
 
-app.post("/updateDriver", verifyToken, async (req, res) => {
-  // User object = req.user
-  // Validate User Input
-  // Update User Info in Database
-  // Return user info (updated)
-  res.status(200).json({
-    status: "success",
-    message: "Profile Updated...",
-    number: req.number,
-  });
-});
+app.post(
+  "/updateDriverStatus",
+  verifyToken,
+  verifyManager,
+  async (req, res) => {
+    if (!req.body.driver_id || !req.body.currentStatus) {
+      return res.status(401).json({ message: "Missing Fields" });
+    }
+    const driver_query = { _id: new ObjectId(req.body.driver_id) };
+    const options = { upsert: false };
+    let driver_update;
+    if (req.body.currentStatus === "active") {
+      driver_update = {
+        $set: {
+          status: "Inactive",
+        },
+      };
+    } else {
+      driver_update = {
+        $set: {
+          status: "Active",
+        },
+      };
+    }
+    const result_driver = await drivers.updateOne(
+      driver_query,
+      driver_update,
+      options
+    );
+    if (result_driver.matchedCount !== result_driver.modifiedCount) {
+      return res.status(401).json({
+        status: "failure",
+        message: "Something went wrong.",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "Status Updated...",
+    });
+  }
+);
 
 app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
   if (!req.body.driver_obj) {
@@ -162,7 +193,7 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
     admin_name: req.manager.name,
     admin_number: req.manager.number,
     Paid: 0,
-    noti_token: ""
+    noti_token: "",
   };
   const newDriver = await drivers.insertOne(driverObject);
   res.status(200).json({
@@ -187,7 +218,7 @@ app.post("/checkToken", verifyToken, async (req, res) => {
         message: "Manager doesn't exists.",
       });
     }
-    user = manager
+    user = manager;
   } else {
     const query = { dNumber: req.body.phone };
     const driver = await drivers.findOne(query);
@@ -197,7 +228,7 @@ app.post("/checkToken", verifyToken, async (req, res) => {
         message: "Driver doesn't exists.",
       });
     }
-    user = driver
+    user = driver;
   }
   res.status(200).json({ status: "success", message: "Token Valid.", user });
 });

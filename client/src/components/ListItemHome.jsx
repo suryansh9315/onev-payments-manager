@@ -24,10 +24,22 @@ const ListItemHome = ({ item }) => {
             backgroundColor: "#fff",
           }}
         >
-          <View>
+          <View
+            style={{
+              height: 300,
+              width: 300,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Image
-              source={item.image_comp}
-              style={{ width: 300, height: 300, resizeMode: "contain" }}
+              source={{ uri: item?.profilePic?.url }}
+              style={{
+                width: 200,
+                height: 200,
+                resizeMode: "cover",
+                borderRadius: 100,
+              }}
             />
           </View>
           <View>
@@ -55,8 +67,14 @@ const ListItemHome = ({ item }) => {
                 >
                   email
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600", textAlign: 'center' }}>
-                  test@test.com
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "600",
+                    textAlign: "center",
+                  }}
+                >
+                  {item?.dEmail}
                 </Text>
               </View>
               <View
@@ -178,7 +196,7 @@ const ListItemHome = ({ item }) => {
                   vehicle model
                 </Text>
                 <Text style={{ fontSize: 20, fontWeight: "600" }}>
-                  {item?.vModel?.substring(0, 10)}
+                  {item?.vModel}
                 </Text>
               </View>
             </View>

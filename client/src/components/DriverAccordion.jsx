@@ -45,6 +45,36 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
     }
   };
 
+  const handleDriverStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/updateDriverStatus`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          driver_id: driver._id,
+          currentStatus: driver.status,
+        }),
+      });
+      const json = await response.json();
+      alert(`${json.message}`);
+      if (response.status === 400) {
+        logout();
+        return;
+      }
+      setReload(!reload);
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong...");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ListItem.Accordion
       bottomDivider
@@ -260,17 +290,18 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
               Update
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ width: 140 }}>
+          <TouchableOpacity style={{ width: 140 }} onPress={handleDriverStatus}>
             <Text
               style={{
-                backgroundColor: "#f44336",
+                backgroundColor:
+                  driver?.status === "Active" ? "#4aaf4f" : "#f44336",
                 paddingVertical: 10,
                 color: "#fff",
                 textAlign: "center",
                 borderRadius: 4,
               }}
             >
-              Delete
+              {driver?.status}
             </Text>
           </TouchableOpacity>
         </View>

@@ -62,7 +62,6 @@ const CustomDrawerAdmin = (props) => {
   return (
     <DrawerContentScrollView
       {...props}
-      style={{ backgroundColor: "rgba(0, 0, 0, 1)" }}
     >
       <View
         style={{
@@ -70,7 +69,7 @@ const CustomDrawerAdmin = (props) => {
           zIndex: 1000,
           width: "100%",
           alignItems: "center",
-          top: 70,
+          top: 80,
         }}
       >
         <Image
@@ -95,7 +94,7 @@ const CustomDrawerAdmin = (props) => {
           }}
         />
       </View>
-      <View style={{ height: height - 134, backgroundColor: "white" }}>
+      <View style={{ height: 350, backgroundColor: "white" }}>
         <View
           style={{
             backgroundColor: "#000",

@@ -10,11 +10,12 @@ import { API_URL } from "@env";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import CustomSplashScreen from "../components/CustomSplashScreen";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
 console.log(API_URL?.substring(0, 0));
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 const Stack = createNativeStackNavigator();
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -125,7 +126,6 @@ const RootNavigator = () => {
     } catch (e) {
       console.log(e);
     } finally {
-      await SplashScreen.hideAsync();
       setLoading(false);
     }
   };
@@ -141,12 +141,14 @@ const RootNavigator = () => {
   };
 
   useEffect(() => {
+    const hideSplash = async () => await SplashScreen.hideAsync();
+    hideSplash()
     getData();
     // clearAll()
   }, []);
 
   if (loading) {
-    return <Loader />;
+    return <CustomSplashScreen />;
   }
 
   return (

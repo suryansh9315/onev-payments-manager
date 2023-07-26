@@ -51,6 +51,50 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:680561497801:android:76bfe5f01b67d05ce59f18",
+        "android_client_info": {
+          "package_name": "com.mautkadevta.paycol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680561497801-jb6mon35f0nehc7jsksdi2qa1j4b6m90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mautkadevta.paycol",
+            "certificate_hash": "31b37f2de3e99b76418ff0f8a1bef587edf2d9e6"
+          }
+        },
+        {
+          "client_id": "680561497801-ktok0v2a8s384fm93o2cq73kqt1qbqtt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABI5HWS4SF0cyqytUvjGLlC9XI_athkGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680561497801-9idc6hpir7v9l36rinmrkhtirtqggdhd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "680561497801-hvpehr4i45v5j58e9rlgut2mh69j5mgs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:680561497801:android:9896b549b16df26be59f18",
         "android_client_info": {
           "package_name": "host.exp.exponent"

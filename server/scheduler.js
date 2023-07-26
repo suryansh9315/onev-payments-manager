@@ -22,7 +22,7 @@ const scheduleJob = () => {
     console.log("Updating Balance of every driver!");
     resetDriverBalance()
   });
-};
+}; 
 
 const scheduleNotiJob = () => {
   const job = schedule.scheduleJob(noti_rule, () => {

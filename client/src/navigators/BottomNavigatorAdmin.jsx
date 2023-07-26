@@ -9,7 +9,7 @@ const Drawer = createDrawerNavigator();
 const BottomNavigator = () => {
   return (
     <Drawer.Navigator
-        initialRouteName="Drivers"
+        initialRouteName="CreateDriver"
         backBehavior="initialRoute"
         screenOptions={{ headerShown: false, drawerStyle: { width: '80%' }}}
         drawerContent={(props) => <CustomDrawerAdmin {...props} />}

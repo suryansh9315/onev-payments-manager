@@ -25,7 +25,7 @@ const items = [
     icon: "payment",
     label: "Pay",
     screen: "Payment",
-    color: "#F75428",
+    color: "#0051C4",
     type: "",
   },
   {
@@ -64,6 +64,7 @@ const CustomDrawer = (props) => {
   return (
     <DrawerContentScrollView
       {...props}
+      style={{ backgroundColor: '#fe8f01' }}
     >
       <View
         style={{
@@ -93,14 +94,14 @@ const CustomDrawer = (props) => {
             left: 0,
             right: 0,
             borderBottomRightRadius: 50,
-            backgroundColor: "#000",
+            backgroundColor: "#fe8f01"
           }}
         />
       </View>
-      <View style={{ height: 350, backgroundColor: "white" }}>
+      <View style={{ height: height - 130, backgroundColor: "white" }}>
         <View
           style={{
-            backgroundColor: "#000",
+            backgroundColor: "#fe8f01",
             flex: 1,
           }}
         />
@@ -136,7 +137,7 @@ const CustomDrawer = (props) => {
             <View
               style={{
                 alignItems: "center",
-                backgroundColor: "#000",
+                backgroundColor: "#fe3d01",
                 justifyContent: "center",
                 borderRadius: 20,
                 height: 40,

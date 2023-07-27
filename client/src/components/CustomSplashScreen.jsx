@@ -25,8 +25,8 @@ const CustomSplashScreen = () => {
       <LottieView
         ref={animationRef}
         style={{
-          width: 250,
-          height: 250,
+          width: 280,
+          height: 280,
           backgroundColor: '#fff'
         }}
         resizeMode="cover"

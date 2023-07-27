@@ -19,59 +19,73 @@ const ListItemHome = ({ item }) => {
         <View
           style={{
             width,
-            height,
             alignItems: "center",
             backgroundColor: "#fff",
           }}
         >
           <View
             style={{
-              height: 300,
-              width: 300,
+              height: 220,
+              width: 220,
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "flex-end",
             }}
           >
             <Image
               source={{ uri: item?.profilePic?.url }}
               style={{
-                width: 200,
-                height: 200,
+                width: 180,
+                height: 180,
                 resizeMode: "cover",
                 borderRadius: 100,
               }}
             />
           </View>
-          <View>
+          <View style={{ marginVertical: 20 }}>
             <Text style={styles.title}>{item?.name}</Text>
             <Text style={styles.description}>{item?.dNumber}</Text>
           </View>
-          <View style={{ gap: 40, marginTop: 40 }}>
+          <ScrollView
+            style={{
+              marginBottom: 20,
+              marginHorizontal: 15,
+              paddingHorizontal: 10,
+              width: "100%",
+            }}
+          >
             <View
               style={{
-                flexDirection: "row",
-                gap: 20,
+                gap: 14,
+                width: "100%",
                 alignItems: "center",
-                justifyContent: "center",
+                paddingTop: 4,
+                paddingBottom: 4,
               }}
             >
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  email
+                  EMAIL
                 </Text>
                 <Text
                   style={{
-                    fontSize: 20,
-                    fontWeight: "600",
-                    textAlign: "center",
+                    fontSize: 15,
+                    fontWeight: "300",
                   }}
                 >
                   {item?.dEmail}
@@ -79,63 +93,78 @@ const ListItemHome = ({ item }) => {
               </View>
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  joining date
+                  JOINING DATE
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {Date(item?.date).split(" ").slice(1, 4).join(" ")}
                 </Text>
               </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 20,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  admin name
+                  ADMIN NAME
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {item?.admin_name}
                 </Text>
               </View>
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  admin number
+                  ADMIN NUMBER
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {item?.admin_number?.split(" ")[1]}
                 </Text>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       );
 
@@ -144,110 +173,146 @@ const ListItemHome = ({ item }) => {
         <View
           style={{
             width,
-            height,
             alignItems: "center",
             backgroundColor: "#fff",
           }}
         >
-          <View>
+          <View
+            style={{
+              height: 250,
+              width: 250,
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
             <Image
               source={item.image_comp}
-              style={{ width: 300, height: 300, resizeMode: "contain" }}
+              style={{ width: 250, height: 250, resizeMode: "contain" }}
             />
           </View>
-          <View>
+          <View style={{ marginBottom: 20 }}>
             <Text style={styles.title}>Vehicle Info</Text>
           </View>
-          <View style={{ gap: 40, marginTop: 30 }}>
+          <ScrollView
+            style={{
+              marginBottom: 20,
+              marginHorizontal: 15,
+              paddingHorizontal: 10,
+              width: "100%",
+            }}
+          >
             <View
               style={{
-                flexDirection: "row",
-                gap: 20,
+                gap: 14,
+                width: "100%",
                 alignItems: "center",
-                justifyContent: "center",
+                paddingTop: 4,
+                paddingBottom: 4,
               }}
             >
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  vehicle number
+                  VEHICLE NUMBER
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "300",
+                  }}
+                >
                   {item?.vNumber}
                 </Text>
               </View>
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  vehicle model
+                  VEHICLE MODEL
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {item?.vModel}
                 </Text>
               </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 20,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  vehicle rent
+                  VEHICLE RENT
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {item?.rent}
                 </Text>
               </View>
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
-                >
-                  owner name
-                </Text>
-                <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: "600",
-                    textAlign: "center",
                   }}
                 >
-                  {item?.name?.split(" ")[0]}
+                  OWNER NAME
+                </Text>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
+                  {item?.name}
                 </Text>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       );
 
@@ -256,88 +321,122 @@ const ListItemHome = ({ item }) => {
         <View
           style={{
             width,
-            height,
             alignItems: "center",
             backgroundColor: "#fff",
           }}
         >
-          <View>
+          <View
+            style={{
+              height: 250,
+              width: 250,
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
             <Image
               source={item.image_comp}
-              style={{ width: 300, height: 300, resizeMode: "contain" }}
+              style={{ width: 230, height: 250, resizeMode: "contain" }}
             />
           </View>
-          <View>
+          <View style={{ marginBottom: 20 }}>
             <Text style={styles.title}>Payment Info</Text>
           </View>
-          <View style={{ gap: 40, marginTop: 30 }}>
+          <ScrollView
+            style={{
+              marginBottom: 20,
+              marginHorizontal: 15,
+              paddingHorizontal: 10,
+              width: "100%",
+            }}
+          >
             <View
               style={{
-                flexDirection: "row",
-                gap: 20,
+                gap: 14,
+                width: "100%",
                 alignItems: "center",
-                justifyContent: "center",
+                paddingTop: 4,
+                paddingBottom: 4,
               }}
             >
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  balance
+                  BALANCE
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "300",
+                  }}
+                >
                   {item?.balance}
                 </Text>
               </View>
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  total paid
+                  TOTAL PAID
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {item?.Paid}
                 </Text>
               </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 20,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
               <View
                 style={{
-                  width: 150,
-                  alignItems: "center",
                   justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
                 }}
               >
                 <Text
-                  style={{ color: "#62656b", fontSize: 14, fontWeight: "300" }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
                 >
-                  payment status
+                  PAYMENT STATUS
                 </Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
                   {item?.balance >= 0 ? "Paid" : "Not Paid"}
                 </Text>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       );
 
@@ -350,10 +449,17 @@ const ListItemHome = ({ item }) => {
             backgroundColor: "#fff",
           }}
         >
-          <View>
+          <View
+            style={{
+              height: 250,
+              width: 250,
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
             <Image
               source={item.image_comp}
-              style={{ width: 300, height: 300, resizeMode: "contain" }}
+              style={{ width: 250, height: 200, resizeMode: "contain" }}
             />
           </View>
           <View>
@@ -387,8 +493,8 @@ export default ListItemHome;
 const styles = StyleSheet.create({
   title: {
     fontWeight: "800",
-    fontSize: 28,
-    marginBottom: 10,
+    fontSize: 24,
+    marginBottom: 5,
     textAlign: "center",
     color: "#493d8a",
   },

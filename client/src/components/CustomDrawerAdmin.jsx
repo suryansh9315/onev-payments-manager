@@ -24,7 +24,7 @@ const items = [
     icon: "adduser",
     label: "Create Driver",
     screen: "CreateDriver",
-    color: "#F75428",
+    color: "#0051C4",
     type: "antdesign",
   },
   {
@@ -62,6 +62,7 @@ const CustomDrawerAdmin = (props) => {
   return (
     <DrawerContentScrollView
       {...props}
+      style={{ backgroundColor: '#fe8f01' }}
     >
       <View
         style={{
@@ -69,7 +70,7 @@ const CustomDrawerAdmin = (props) => {
           zIndex: 1000,
           width: "100%",
           alignItems: "center",
-          top: 80,
+          top: 75,
         }}
       >
         <Image
@@ -90,14 +91,14 @@ const CustomDrawerAdmin = (props) => {
             left: 0,
             right: 0,
             borderBottomRightRadius: 50,
-            backgroundColor: "#000",
+            backgroundColor: "#fe8f01",
           }}
         />
       </View>
-      <View style={{ height: 350, backgroundColor: "white" }}>
+      <View style={{ height: height - 130, backgroundColor: "white" }}>
         <View
           style={{
-            backgroundColor: "#000",
+            backgroundColor: "#fe8f01",
             flex: 1,
           }}
         />
@@ -133,7 +134,7 @@ const CustomDrawerAdmin = (props) => {
             <View
               style={{
                 alignItems: "center",
-                backgroundColor: "#000",
+                backgroundColor: "#fe3d01",
                 justifyContent: "center",
                 borderRadius: 20,
                 height: 40,

@@ -71,7 +71,7 @@ const CreateDriver = () => {
       copyToCacheDirectory: false,
       type: "application/pdf",
     });
-    if (!result.canceled) {
+    if (result.type !== "cancel") {
       setDoc({ uri: result.uri, type: "pdf" });
     }
   };

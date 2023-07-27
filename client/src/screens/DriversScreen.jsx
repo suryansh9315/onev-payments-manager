@@ -69,8 +69,10 @@ const DriversScreen = () => {
         logout();
         return;
       }
-      setDrivers(json.docs);
-      setFilteredDrivers(json.docs);
+      const rawDrivers = json.docs
+      rawDrivers?.sort((a, b) => a.balance - b.balance)
+      setDrivers(rawDrivers);
+      setFilteredDrivers(rawDrivers);
     } catch (error) {
       alert("Something went wrong...");
     } finally {

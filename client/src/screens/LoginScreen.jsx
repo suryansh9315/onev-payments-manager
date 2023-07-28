@@ -11,14 +11,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
-import { CheckBox } from '@rneui/themed';
+import { CheckBox } from "@rneui/themed";
 import { useRecoilState } from "recoil";
 import { admin, number } from "../atoms/User";
 import Loader from "../components/Loader";
 import { useState } from "react";
-import { API_URL } from '@env' 
+import { API_URL } from "@env";
 
-console.log(API_URL?.substring(0,0))
+console.log(API_URL?.substring(0, 0));
 const height = Dimensions.get("window").height;
 
 const LoginScreen = ({ navigation }) => {
@@ -27,23 +27,20 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const requestOtp = async () => {
-    if (phone?.length !== 10) return
+    if (phone?.length !== 10) return;
     try {
       setLoading(true);
-      const response = await fetch(
-        `${API_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            number: "+91 " + phone,
-            isManager: isAdmin,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          number: "+91 " + phone,
+          isManager: isAdmin,
+        }),
+      });
       const json = await response.json();
       console.log(json);
       if (response.status === 200) {
@@ -69,10 +66,10 @@ const LoginScreen = ({ navigation }) => {
       <ScrollView>
         <View style={styles.logoContainer}>
           <Image
-            source={require("../../assets/logo.png")}
+            source={require("../../assets/paycol_3.png")}
             style={styles.logo}
           />
-          <Text style={styles.logoHeading}>PAYCOL</Text>
+          {/* <Text style={styles.logoHeading}>PAYCOL</Text> */}
         </View>
         <View style={styles.inputContainer}>
           <View style={styles.inputContainerWrapper}>
@@ -111,7 +108,7 @@ const LoginScreen = ({ navigation }) => {
             </View>
             <View
               style={{
-                backgroundColor: "#0051c3",
+                backgroundColor: "#ffffff",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "flex-end",
@@ -124,19 +121,18 @@ const LoginScreen = ({ navigation }) => {
                 uncheckedIcon="square-o"
                 checked={isAdmin}
                 containerStyle={{
-                  borderWidth: 0,
                   padding: 0,
                   margin: 0,
-                  backgroundColor: '#0051c3',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  backgroundColor: "#ffffff",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
                 size={22}
-                checkedColor="#53ed58"
-                uncheckedColor="#f9f9f9"
+                checkedColor="#000000"
+                uncheckedColor="#000000"
                 onPress={() => setIsAdmin(!isAdmin)}
               />
-              <Text style={{ color: "#fff", fontWeight: "300" }}>Admin</Text>
+              <Text style={{ color: "#000000", fontWeight: "300" }}>Admin</Text>
             </View>
           </View>
         </View>
@@ -152,14 +148,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logoContainer: {
-    backgroundColor: "#F4FDFE",
+    backgroundColor: "#0051c3",
     alignItems: "center",
     justifyContent: "center",
     minHeight: (2 / 3) * height,
   },
   logo: {
-    height: 250,
-    width: 250,
+    width: 350,
+    height: 200,
   },
   logoHeading: {
     fontSize: 35,
@@ -170,7 +166,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   inputContainer: {
-    backgroundColor: "#0051c3",
+    backgroundColor: "#ffffff",
     alignItems: "center",
     justifyContent: "center",
     minHeight: (1 / 3) * height,
@@ -187,12 +183,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   inputTitle: {
-    color: "white",
+    color: "#000",
     fontSize: 25,
     fontWeight: "400",
   },
   inputDesc: {
-    color: "white",
+    color: "#000",
     fontSize: 14,
     fontWeight: "300",
   },
@@ -207,11 +203,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F4FDFE",
+    backgroundColor: "#ffffff",
     height: 50,
     borderRadius: 5,
     gap: 5,
     width: "30%",
+    elevation: 2,
   },
   mobileContainer: {
     height: 50,
@@ -220,8 +217,9 @@ const styles = StyleSheet.create({
   },
   mobileInput: {
     borderRadius: 5,
-    backgroundColor: "#F4FDFE",
+    backgroundColor: "#ffffff",
     paddingHorizontal: 20,
     paddingVertical: 12,
+    elevation: 2,
   },
 });

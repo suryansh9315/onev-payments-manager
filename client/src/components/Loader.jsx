@@ -20,8 +20,8 @@ const Loader = () => {
         <LottieView
           ref={loaderAnimationRef}
           style={{
-            width: 200,
-            height: 200,
+            width: 150,
+            height: 150,
           }}
           resizeMode="cover"
           source={require("../animations/loader.json")}

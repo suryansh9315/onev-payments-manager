@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Paycol",
+    "name": "Fleet Ops",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/paycol.png",
+    "icon": "./assets/paycol_3.png",
     "userInterfaceStyle": "light",
     "splash": {
       "backgroundColor": "#0051c3"
@@ -15,7 +15,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/paycol.png",
+        "foregroundImage": "./assets/paycol_3.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.RECORD_AUDIO"],

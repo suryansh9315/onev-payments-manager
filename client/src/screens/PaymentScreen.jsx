@@ -53,7 +53,7 @@ const PaymentScreen = () => {
         name: "Paycol Corp",
         order_id,
         prefill: {
-          email: "test@test.com",
+          email: driver_info?.dEmail,
           contact: driver_info?.dNumber.split(" ").join(),
           name: driver_info?.name,
         },
@@ -173,7 +173,7 @@ const PaymentScreen = () => {
             Move the dial to pay more or less to earn points.
           </Text>
         </View>
-        <CircularSlider payment={payment} setPayment={setPayment} />
+        <CircularSlider payment={payment > 5000 ? 5000 : payment} setPayment={setPayment} />
         <View
           style={{
             position: "absolute",

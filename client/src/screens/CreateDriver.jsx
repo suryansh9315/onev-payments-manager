@@ -24,7 +24,7 @@ import LottieView from "lottie-react-native";
 
 console.log(API_URL?.substring(0, 0));
 const data = [
-  // { key: "Piaggio Ev 3W", value: "Piaggio Ev 3W" },
+  { key: "Piaggio Ev 3W", value: "Piaggio Ev 3W" },
   { key: "Euler Ev 3W", value: "Euler Ev 3W" },
   { key: "OSM Log9 Ev 3W", value: "OSM Log9 Ev 3W" },
   { key: "Tata Ace Ev 4W", value: "Tata Ace Ev 4W" },
@@ -446,7 +446,7 @@ const CreateDriver = () => {
               inputStyle={{ fontSize: 16 }}
             />
             <Input
-              placeholder="$ 800"
+              placeholder="&#8377; 800"
               value={rent}
               onChangeText={(e) => setRent(e)}
               errorStyle={{ display: "none" }}

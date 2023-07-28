@@ -42,6 +42,8 @@ app.post("/createOrder", verifyToken, verifyDriver, async (req, res) => {
     const order_object = {
       ...response,
       driver_id: req.driver._id,
+      driver_name: req.driver.name,
+      driver_number: req.driver.dNumber,
       txnId,
       razorpay_payment_id: "",
       razorpay_order_id: "",
@@ -98,6 +100,8 @@ app.post("/createCashOrder", verifyToken, verifyManager, async (req, res) => {
       driver_id: oldDriver._id,
       txnId,
       type: "Cash",
+      driver_name: oldDriver.name,
+      driver_number: oldDriver.dNumber,
     };
     const newOrder = await orders.insertOne(order_object);
     const options = { upsert: false };

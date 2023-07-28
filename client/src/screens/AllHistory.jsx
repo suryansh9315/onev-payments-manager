@@ -6,8 +6,11 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect } from "react";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Icon } from "@rneui/themed";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { Icon, Input } from "@rneui/themed";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import HistoryGraph from "../components/HistoryGraph";
 import { useState } from "react";
@@ -33,6 +36,8 @@ const AllHistory = () => {
   const token = useRecoilValue(sessionToken);
   const [orders, setOrders] = useState([]);
   const [allTimeEarn, setAllTimeEarn] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredOrders, setFilteredOrders] = useState([]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -68,6 +73,7 @@ const AllHistory = () => {
         const unsorted_orders = json.orders;
         unsorted_orders.sort((a, b) => b.created_at - a.created_at);
         setOrders(unsorted_orders);
+        setFilteredOrders(unsorted_orders);
       } else {
         alert(`${json.message}`);
       }
@@ -77,6 +83,19 @@ const AllHistory = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    if (searchInput.length === 0) {
+      return setFilteredOrders(orders);
+    }
+    setFilteredOrders(
+      orders.filter(
+        (order) =>
+          order?.driver_name.includes(searchInput) ||
+          order?.driver_number.includes(searchInput)
+      )
+    );
   };
 
   useEffect(() => {
@@ -96,7 +115,7 @@ const AllHistory = () => {
           style={{
             backgroundColor: "#fff",
             flex: 1,
-            gap: 30,
+            gap: 20,
             paddingHorizontal: 20,
             minHeight: height,
             paddingBottom: 20,
@@ -169,11 +188,33 @@ const AllHistory = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View>
+          <View style={{ marginBottom: 10 }}>
             <HistoryGraph mode={"Admin"} />
           </View>
           <View>
-            {orders.map((item) => (
+            <Input
+              value={searchInput}
+              onChangeText={(e) => setSearchInput(e)}
+              placeholder="Search"
+              leftIcon={
+                <Icon name="search1" type="antdesign" size={24} color="gray" />
+              }
+              onEndEditing={handleSearch}
+              leftIconContainerStyle={{ marginRight: 10 }}
+              errorStyle={{ display: "none" }}
+              inputContainerStyle={{
+                paddingHorizontal: 15,
+                paddingVertical: 0,
+                backgroundColor: "#fff",
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: "#949494",
+              }}
+              inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
+            />
+          </View>
+          <View>
+            {filteredOrders.map((item) => (
               <TouchableOpacity
                 key={item.txnId}
                 style={{
@@ -202,7 +243,7 @@ const AllHistory = () => {
                       }}
                     />
                     <Text style={{ fontSize: 18, fontWeight: "500" }}>
-                      #{item?.txnId.substring(0, 12)}...
+                      {item?.driver_name}
                     </Text>
                   </View>
                   <Text

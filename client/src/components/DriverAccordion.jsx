@@ -1,9 +1,10 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import { Animated, Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useRef, useState } from "react";
 import { ListItem, Icon, Input } from "@rneui/themed";
 import { sessionToken } from "../atoms/User";
 import { useRecoilValue } from "recoil";
 import { API_URL } from "@env";
+import DriverDoc from "./DriverDoc";
 
 console.log(API_URL?.substring(0, 0));
 
@@ -11,6 +12,9 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
   const [expanded, setExpanded] = useState(false);
   const token = useRecoilValue(sessionToken);
   const [cash, setCash] = useState("");
+  const docsRef = useRef();
+  const [docs, setDocs] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const handlePaymentUpdate = async () => {
     if (cash < 500) {
@@ -75,6 +79,26 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
     }
   };
 
+  const showHideDocs = () => {
+    if (docs) {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+      setTimeout(() => {
+        setDocs(!docs);
+      }, 200);
+    } else {
+      setDocs(!docs);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
   return (
     <ListItem.Accordion
       bottomDivider
@@ -110,6 +134,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
           gap: 20,
           borderBottomRightRadius: 5,
           borderBottomLeftRadius: 5,
+          marginBottom: 10,
         }}
       >
         <View
@@ -248,6 +273,12 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             </Text>
           </View>
         </View>
+        <Animated.View
+          style={{ display: docs ? "flex" : "none", opacity: fadeAnim }}
+          ref={docsRef}
+        >
+          <DriverDoc item={driver} />
+        </Animated.View>
         <View style={{ marginTop: 10 }}>
           <Input
             onChangeText={(e) => setCash(+e)}
@@ -266,44 +297,84 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
           />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-            width: "100%",
-          }}
-        >
-          <TouchableOpacity
-            style={{ width: 140 }}
-            onPress={handlePaymentUpdate}
+        <View style={{ gap: 15 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              width: "100%",
+            }}
           >
-            <Text
-              style={{
-                backgroundColor: "#ffae00",
-                color: "#fff",
-                textAlign: "center",
-                paddingVertical: 10,
-                borderRadius: 4,
-              }}
+            <TouchableOpacity
+              style={{ width: 140 }}
+              onPress={handlePaymentUpdate}
             >
-              Update
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{ width: 140 }} onPress={handleDriverStatus}>
-            <Text
-              style={{
-                backgroundColor:
-                  driver?.status === "Active" ? "#4aaf4f" : "#f44336",
-                paddingVertical: 10,
-                color: "#fff",
-                textAlign: "center",
-                borderRadius: 4,
-              }}
+              <Text
+                style={{
+                  backgroundColor: "#ffae00",
+                  color: "#fff",
+                  textAlign: "center",
+                  paddingVertical: 10,
+                  borderRadius: 4,
+                }}
+              >
+                Update
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ width: 140 }}
+              onPress={handleDriverStatus}
             >
-              {driver?.status}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  backgroundColor:
+                    driver?.status === "Active" ? "#4aaf4f" : "#f44336",
+                  paddingVertical: 10,
+                  color: "#fff",
+                  textAlign: "center",
+                  borderRadius: 4,
+                }}
+              >
+                {driver?.status}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+              width: "100%",
+            }}
+          >
+            <TouchableOpacity style={{ width: 140 }} onPress={showHideDocs}>
+              <Text
+                style={{
+                  backgroundColor: "#0051C4",
+                  color: "#fff",
+                  textAlign: "center",
+                  paddingVertical: 10,
+                  borderRadius: 4,
+                }}
+              >
+                {docs ? "Hide Docs" : "View Docs"}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ width: 140 }}>
+              <Text
+                style={{
+                  backgroundColor: "#350000",
+                  paddingVertical: 10,
+                  color: "#fff",
+                  textAlign: "center",
+                  borderRadius: 4,
+                }}
+              >
+                Delete
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ListItem.Accordion>

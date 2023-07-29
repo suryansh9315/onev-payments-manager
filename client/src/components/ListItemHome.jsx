@@ -284,7 +284,7 @@ const ListItemHome = ({ item }) => {
                   VEHICLE RENT
                 </Text>
                 <Text style={{ fontSize: 15, fontWeight: "300" }}>
-                  {item?.rent}
+                  &#8377; {item?.rent}
                 </Text>
               </View>
               <View
@@ -384,7 +384,7 @@ const ListItemHome = ({ item }) => {
                     fontWeight: "300",
                   }}
                 >
-                  {item?.balance}
+                  &#8377; {item?.balance}
                 </Text>
               </View>
               <View
@@ -408,7 +408,7 @@ const ListItemHome = ({ item }) => {
                   TOTAL PAID
                 </Text>
                 <Text style={{ fontSize: 15, fontWeight: "300" }}>
-                  {item?.Paid}
+                &#8377; {item?.Paid}
                 </Text>
               </View>
               <View

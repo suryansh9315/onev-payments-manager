@@ -347,7 +347,7 @@ const CreateDriver = () => {
             <Input
               value={name}
               onChangeText={(e) => setName(e)}
-              placeholder="Elon Musk"
+              placeholder="Parth Yadav"
               label="Name"
               labelStyle={{
                 color: "#000",
@@ -365,7 +365,7 @@ const CreateDriver = () => {
               inputStyle={{ fontSize: 16 }}
             />
             <Input
-              placeholder="DL 7CN 7222"
+              placeholder="XY88 XY8888"
               value={vNumber}
               onChangeText={(e) => setVNumber(e)}
               label="Vehicle Number"
@@ -405,7 +405,7 @@ const CreateDriver = () => {
               />
             </View>
             <Input
-              placeholder="9315566594"
+              placeholder="931XXXX594"
               value={dNumber}
               onChangeText={(e) => setDNumber(e)}
               keyboardType="numeric"

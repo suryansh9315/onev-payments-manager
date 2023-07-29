@@ -138,14 +138,21 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
         }}
       >
         <View
-          style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            width: "100%",
+            justifyContent: "space-between",
+            paddingHorizontal: 30,
+            gap: 30
+          }}
         >
           <Image
-            source={require("../../assets/Profile.png")}
-            style={{ height: 120, width: 120 }}
+            source={{ uri: driver?.profilePic.url }}
+            style={{ height: 100, width: 100, borderRadius: 60 }}
           />
-          <View style={{ marginLeft: 30 }}>
-            <Text style={{ fontSize: 18 }}>{driver?.name}</Text>
+          <View>
+            <Text style={{ fontSize: 18, maxWidth: 150 }}>{driver?.name}</Text>
             <Text style={{ fontSize: 14, color: "gray" }}>
               {driver?.dNumber}
             </Text>
@@ -212,7 +219,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             <Text style={{ fontSize: 10, color: "gray", marginBottom: 2 }}>
               Rent
             </Text>
-            <Text style={{ fontSize: 18 }}>$ {driver?.rent}</Text>
+            <Text style={{ fontSize: 18 }}>&#8377; {driver?.rent}</Text>
           </View>
           <View
             style={{
@@ -228,7 +235,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             <Text style={{ fontSize: 10, color: "gray", marginBottom: 2 }}>
               Balance
             </Text>
-            <Text style={{ fontSize: 18 }}>{driver?.balance}</Text>
+            <Text style={{ fontSize: 18 }}>&#8377; {driver?.balance}</Text>
           </View>
         </View>
         <View

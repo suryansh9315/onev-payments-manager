@@ -199,7 +199,7 @@ const HistoryScreen = () => {
                       paddingLeft: 20,
                     }}
                   >
-                    {formatter.format(item?.created_at * 1000)}
+                    {formatter.format(item?.created_at * 1000)} - {item?.admin_name}
                   </Text>
                 </View>
                 <View

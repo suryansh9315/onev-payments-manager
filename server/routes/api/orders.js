@@ -102,6 +102,8 @@ app.post("/createCashOrder", verifyToken, verifyManager, async (req, res) => {
       type: "Cash",
       driver_name: oldDriver.name,
       driver_number: oldDriver.dNumber,
+      admin_name: req.manager.name,
+      admin_number: req.manager.number
     };
     const newOrder = await orders.insertOne(order_object);
     const options = { upsert: false };

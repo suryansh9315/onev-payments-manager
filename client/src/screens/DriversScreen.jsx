@@ -18,6 +18,10 @@ import FilterAccordion from "../components/FilterAccordion";
 import SortAccordion from "../components/SortAccordion";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import XLSX from "xlsx";
 
 console.log(API_URL?.substring(0, 0));
 
@@ -69,8 +73,8 @@ const DriversScreen = () => {
         logout();
         return;
       }
-      const rawDrivers = json.docs
-      rawDrivers?.sort((a, b) => a.balance - b.balance)
+      const rawDrivers = json.docs;
+      rawDrivers?.sort((a, b) => a.balance - b.balance);
       setDrivers(rawDrivers);
       setFilteredDrivers(rawDrivers);
     } catch (error) {
@@ -91,6 +95,43 @@ const DriversScreen = () => {
           driver?.dNumber.includes(searchInput)
       )
     );
+  };
+
+  const downloadExcel = async () => {
+    try {
+      const drivers_list = [];
+      for (const driver of drivers) {
+        drivers_list.push({
+          name: driver.name,
+          number: driver.dNumber,
+          balance: driver.balance,
+          vehicle_number: driver.vNumber,
+          vehicle_model: driver.vModel,
+          rent: driver.rent,
+          status: driver.status,
+        });
+      }
+      const ws = XLSX.utils.json_to_sheet(drivers_list);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Drivers");
+      const wbout = XLSX.write(wb, {
+        type: "base64",
+        bookType: "xlsx",
+      });
+      const uri = FileSystem.cacheDirectory + "drivers.xlsx";
+      await FileSystem.writeAsStringAsync(uri, wbout, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      await Sharing.shareAsync(uri, {
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        dialogTitle: "MyWater data",
+        UTI: "com.microsoft.excel.xlsx",
+      });
+    } catch (error) {
+      console.log(error);
+      alert("Somethng went wrong...");
+    }
   };
 
   useEffect(() => {
@@ -143,7 +184,11 @@ const DriversScreen = () => {
             />
           </View>
         </View>
-        <View style={{ marginBottom: 20 }}>
+        <View
+          style={{
+            marginBottom: 20,
+          }}
+        >
           <Input
             value={searchInput}
             onChangeText={(e) => setSearchInput(e)}
@@ -151,16 +196,27 @@ const DriversScreen = () => {
             leftIcon={
               <Icon name="search1" type="antdesign" size={24} color="gray" />
             }
+            rightIcon={
+              <TouchableOpacity onPress={downloadExcel}>
+                <MaterialCommunityIcons
+                  name="microsoft-excel"
+                  size={28}
+                  color="#3a3a3a"
+                />
+              </TouchableOpacity>
+            }
             onEndEditing={handleSearch}
             leftIconContainerStyle={{ marginRight: 10 }}
             errorStyle={{ display: "none" }}
             inputContainerStyle={{
-              paddingHorizontal: 15,
-              paddingVertical: 0,
+              paddingLeft: 15,
+              paddingRight: 10,
+              paddingVertical: 4,
               backgroundColor: "#fff",
               borderRadius: 10,
+              elevation: 1,
               borderWidth: 1,
-              borderColor: "#ffffff",
+              borderColor: "#fff",
             }}
             inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
           />

@@ -18,8 +18,10 @@
     "expo": "~48.0.18",
     "expo-device": "~5.2.1",
     "expo-document-picker": "~11.2.2",
+    "expo-file-system": "~15.2.2",
     "expo-image-picker": "~14.1.1",
     "expo-notifications": "~0.18.1",
+    "expo-sharing": "~11.2.2",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
     "firebase": "^10.0.0",
@@ -38,7 +40,8 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
     "react-native-vector-icons": "^9.2.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

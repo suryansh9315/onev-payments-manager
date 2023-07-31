@@ -21,6 +21,7 @@ import { API_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import { SelectList } from "react-native-dropdown-select-list";
 import LottieView from "lottie-react-native";
+import Profile_JSON from '../animations/profile_2.json'
 
 console.log(API_URL?.substring(0, 0));
 const data = [
@@ -28,7 +29,7 @@ const data = [
   { key: "Euler Ev 3W", value: "Euler Ev 3W" },
   { key: "OSM Log9 Ev 3W", value: "OSM Log9 Ev 3W" },
   { key: "Tata Ace Ev 4W", value: "Tata Ace Ev 4W" },
-  { key: "Altigreem Ev 3W", value: "Altigreem Ev 3W" },
+  { key: "Altigreen Ev 3W", value: "Altigreen Ev 3W" },
 ];
 
 const CreateDriver = () => {
@@ -214,7 +215,7 @@ const CreateDriver = () => {
         vNumber: vNumber.toUpperCase(),
         vModel,
         rent: +rent,
-        status: "Active"
+        status: "Active",
       };
       const response = await fetch(`${API_URL}/api/auth/createDriver`, {
         method: "POST",
@@ -272,10 +273,7 @@ const CreateDriver = () => {
 
   useEffect(() => {
     profileAnimationRef.current?.play();
-    return () => {
-      profileAnimationRef.current?.reset();
-    };
-  }, []);
+  }, [profilePic]);
 
   if (loading) {
     return <Loader />;
@@ -326,20 +324,29 @@ const CreateDriver = () => {
           <View style={styles.inputContainer}>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               <TouchableOpacity onPress={() => pickImageCamera(setProfilePic)}>
-                {!profilePic ? (
-                  <LottieView
-                    ref={profileAnimationRef}
+                {!profilePic?.uri ? (
+                  <View
                     style={{
-                      width: 180,
-                      height: 180,
+                      width: 200,
+                      height: 200,
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}
-                    resizeMode="cover"
-                    source={require("../animations/profile.json")}
-                  />
+                  >
+                    <LottieView
+                      ref={profileAnimationRef}
+                      style={{
+                        width: 280,
+                        height: 280,
+                      }}
+                      resizeMode="cover"
+                      source={Profile_JSON}
+                    />
+                  </View>
                 ) : (
                   <Image
                     source={{ uri: profilePic.uri }}
-                    style={{ height: 180, width: 180, borderRadius: 90 }}
+                    style={{ height: 200, width: 200, borderRadius: 100 }}
                   />
                 )}
               </TouchableOpacity>
@@ -474,7 +481,14 @@ const CreateDriver = () => {
                 errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
-                  <View style={{ flexDirection: "row", gap: 6, alignItems: 'center', justifyContent: 'center' }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
                     <TouchableOpacity
                       onPress={() => pickDocument(setAadharFront)}
                     >
@@ -533,7 +547,14 @@ const CreateDriver = () => {
                 errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
-                  <View style={{ flexDirection: "row", gap: 6, alignItems: 'center', justifyContent: 'center' }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
                     <TouchableOpacity
                       onPress={() => pickDocument(setAadharBack)}
                     >
@@ -586,10 +607,15 @@ const CreateDriver = () => {
                 errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
-                  <View style={{ flexDirection: "row", gap: 6, alignItems: 'center', justifyContent: 'center' }}>
-                    <TouchableOpacity
-                      onPress={() => pickDocument(setDLFront)}
-                    >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => pickDocument(setDLFront)}>
                       <Icon
                         name="documents-outline"
                         size={22}
@@ -645,10 +671,15 @@ const CreateDriver = () => {
                 errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
-                  <View style={{ flexDirection: "row", gap: 6, alignItems: 'center', justifyContent: 'center' }}>
-                    <TouchableOpacity
-                      onPress={() => pickDocument(setDLBack)}
-                    >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => pickDocument(setDLBack)}>
                       <Icon
                         name="documents-outline"
                         size={22}
@@ -698,10 +729,15 @@ const CreateDriver = () => {
                 editable={false}
                 errorStyle={{ display: "none" }}
                 rightIcon={
-                  <View style={{ flexDirection: "row", gap: 6, alignItems: 'center', justifyContent: 'center' }}>
-                    <TouchableOpacity
-                      onPress={() => pickDocument(setRCFront)}
-                    >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => pickDocument(setRCFront)}>
                       <Icon
                         name="documents-outline"
                         size={22}
@@ -757,10 +793,15 @@ const CreateDriver = () => {
                 errorStyle={{ display: "none" }}
                 editable={false}
                 rightIcon={
-                  <View style={{ flexDirection: "row", gap: 6, alignItems: 'center', justifyContent: 'center' }}>
-                    <TouchableOpacity
-                      onPress={() => pickDocument(setRCBack)}
-                    >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => pickDocument(setRCBack)}>
                       <Icon
                         name="documents-outline"
                         size={22}

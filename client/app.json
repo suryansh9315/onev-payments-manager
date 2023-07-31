@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Fleet Ops",
-    "slug": "client",
+    "slug": "onev-fleet-ops",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/paycol_3.png",
@@ -9,7 +9,9 @@
     "splash": {
       "backgroundColor": "#0051c3"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -18,8 +20,10 @@
         "foregroundImage": "./assets/paycol_3.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.mautkadevta.paycol",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.onev.fleetops",
       "versionCode": 1,
       "googleServicesFile": "./google-services.json"
     },
@@ -43,8 +47,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "f150ca11-17b3-41c1-a3c2-a6671ed486df"
+        "projectId": "eb20163c-e6a9-47b7-b651-cb301a5bc2ef"
       }
-    }
+    },
+    "owner": "devlopergod"
   }
 }

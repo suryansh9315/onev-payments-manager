@@ -254,7 +254,8 @@ const AllHistory = () => {
                       paddingLeft: 20,
                     }}
                   >
-                    {formatter.format(item?.created_at * 1000)} - {item?.admin_name}
+                    {formatter.format(item?.created_at * 1000)}
+                    {item?.admin_name ? ` - ${item?.admin_name}` : ""}
                   </Text>
                 </View>
                 <View

@@ -1,137 +1,42 @@
 {
   "project_info": {
-    "project_number": "680561497801",
-    "project_id": "otaku-love-96ab3",
-    "storage_bucket": "otaku-love-96ab3.appspot.com"
+    "project_number": "130276431433",
+    "project_id": "onev-fleet-ops",
+    "storage_bucket": "onev-fleet-ops.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:680561497801:android:c3bba7c56dab605be59f18",
+        "mobilesdk_app_id": "1:130276431433:android:0c67894fc23c006514d198",
         "android_client_info": {
-          "package_name": "com.mautkadevta.onevpayments"
+          "package_name": "com.onev.fleetops"
         }
       },
       "oauth_client": [
         {
-          "client_id": "680561497801-9lcs0i9vmr9v44qgc18l2nlt8bh94ick.apps.googleusercontent.com",
+          "client_id": "130276431433-g81tg272581jv4a52nunirf85env9svk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mautkadevta.onevpayments",
-            "certificate_hash": "e21cb1e4b9f1bffed799921825ba20baf7f1d3bd"
+            "package_name": "com.onev.fleetops",
+            "certificate_hash": "c1252b445c805d13f24cd1fa8e9f9bde33c40774"
           }
         },
         {
-          "client_id": "680561497801-ktok0v2a8s384fm93o2cq73kqt1qbqtt.apps.googleusercontent.com",
+          "client_id": "130276431433-78n08ku6anvibm4jtumjan93qa3ilppi.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyABI5HWS4SF0cyqytUvjGLlC9XI_athkGU"
+          "current_key": "AIzaSyCv6GG9f9wsgNQmY0QsqfHxClgVKZTPLTQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "680561497801-9idc6hpir7v9l36rinmrkhtirtqggdhd.apps.googleusercontent.com",
+              "client_id": "130276431433-78n08ku6anvibm4jtumjan93qa3ilppi.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "680561497801-hvpehr4i45v5j58e9rlgut2mh69j5mgs.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "host.exp.exponent"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:680561497801:android:76bfe5f01b67d05ce59f18",
-        "android_client_info": {
-          "package_name": "com.mautkadevta.paycol"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "680561497801-jb6mon35f0nehc7jsksdi2qa1j4b6m90.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mautkadevta.paycol",
-            "certificate_hash": "31b37f2de3e99b76418ff0f8a1bef587edf2d9e6"
-          }
-        },
-        {
-          "client_id": "680561497801-ktok0v2a8s384fm93o2cq73kqt1qbqtt.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyABI5HWS4SF0cyqytUvjGLlC9XI_athkGU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "680561497801-9idc6hpir7v9l36rinmrkhtirtqggdhd.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "680561497801-hvpehr4i45v5j58e9rlgut2mh69j5mgs.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "host.exp.exponent"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:680561497801:android:9896b549b16df26be59f18",
-        "android_client_info": {
-          "package_name": "host.exp.exponent"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "680561497801-dsq1ibl6aq6mnpg7dq8b986va7osp633.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "host.exp.exponent",
-            "certificate_hash": "c3ad8f2dabfdccbf8e2abd3dd3be9e00124f778b"
-          }
-        },
-        {
-          "client_id": "680561497801-ktok0v2a8s384fm93o2cq73kqt1qbqtt.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyABI5HWS4SF0cyqytUvjGLlC9XI_athkGU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "680561497801-9idc6hpir7v9l36rinmrkhtirtqggdhd.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "680561497801-hvpehr4i45v5j58e9rlgut2mh69j5mgs.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "host.exp.exponent"
-              }
             }
           ]
         }

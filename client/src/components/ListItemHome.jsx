@@ -112,7 +112,7 @@ const ListItemHome = ({ item }) => {
                   JOINING DATE
                 </Text>
                 <Text style={{ fontSize: 15, fontWeight: "300" }}>
-                  {Date(item?.date).split(" ").slice(1, 4).join(" ")}
+                  {new Date(item?.date).split(" ").slice(1, 4).join(" ")}
                 </Text>
               </View>
               <View

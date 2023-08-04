@@ -16,7 +16,7 @@ const connectDb = async () => {
 };
 
 const resetDriverBalance = async () => {
-  const filter = { "status": "active" };
+  const filter = { "status": "Active" };
   const updatePipeline = [
     {
       $set: {

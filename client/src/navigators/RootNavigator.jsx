@@ -100,22 +100,25 @@ const RootNavigator = () => {
           logout();
           return;
         }
-        if( !userr.isAdmin){
-          const noti_token = await registerForPushNotificationsAsync()
-          console.log(noti_token)
+        if (!userr.isAdmin) {
+          const noti_token = await registerForPushNotificationsAsync();
+          console.log(noti_token);
           if (noti_token) {
-            json.user.noti_token = noti_token
-            const nRes = await fetch(`${API_URL}/api/notification/addNotiToken`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                token: userr.token,
-                noti_token
-              }),
-            });
+            json.user.noti_token = noti_token;
+            const nRes = await fetch(
+              `${API_URL}/api/notification/addNotiToken`,
+              {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  token: userr.token,
+                  noti_token,
+                }),
+              }
+            );
           }
         }
         setUser(json.user);
@@ -142,7 +145,7 @@ const RootNavigator = () => {
 
   useEffect(() => {
     const hideSplash = async () => await SplashScreen.hideAsync();
-    hideSplash()
+    hideSplash();
     getData();
     // clearAll()
   }, []);

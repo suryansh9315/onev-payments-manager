@@ -112,7 +112,11 @@ const ListItemHome = ({ item }) => {
                   JOINING DATE
                 </Text>
                 <Text style={{ fontSize: 15, fontWeight: "300" }}>
-                  {new Date(item?.date).split(" ").slice(1, 4).join(" ")}
+                  {new Date(item?.date)
+                    .toString()
+                    ?.split(" ")
+                    ?.slice(1, 4)
+                    ?.join(" ")}
                 </Text>
               </View>
               <View
@@ -408,7 +412,7 @@ const ListItemHome = ({ item }) => {
                   TOTAL PAID
                 </Text>
                 <Text style={{ fontSize: 15, fontWeight: "300" }}>
-                &#8377; {item?.Paid}
+                  &#8377; {item?.Paid}
                 </Text>
               </View>
               <View

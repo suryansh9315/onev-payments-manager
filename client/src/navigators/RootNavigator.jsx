@@ -48,7 +48,7 @@ async function registerForPushNotificationsAsync() {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
+      lightColor: "#0051c3",
     });
   }
   return token;
@@ -101,8 +101,10 @@ const RootNavigator = () => {
           return;
         }
         if (!userr.isAdmin) {
-          const noti_token = await registerForPushNotificationsAsync();
-          console.log(noti_token);
+          let noti_token = "";
+          try {
+            noti_token = await registerForPushNotificationsAsync();
+          } catch (error) {}
           if (noti_token) {
             json.user.noti_token = noti_token;
             const nRes = await fetch(

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect, useRef, useState } from "react";
@@ -21,7 +22,7 @@ import { API_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import { SelectList } from "react-native-dropdown-select-list";
 import LottieView from "lottie-react-native";
-import Profile_JSON from '../animations/profile_2.json'
+import Profile_JSON from "../animations/profile_4.json";
 
 console.log(API_URL?.substring(0, 0));
 const data = [
@@ -39,6 +40,7 @@ const CreateDriver = () => {
   const [userr, setUser] = useRecoilState(user);
   const [phone, setPhone] = useRecoilState(number);
   const [name, setName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
   const [dNumber, setDNumber] = useState("");
   const [dEmail, setDEmail] = useState("");
   const [vNumber, setVNumber] = useState("");
@@ -47,6 +49,9 @@ const CreateDriver = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [aadharFront, setAadharFront] = useState(null);
   const [aadharBack, setAadharBack] = useState(null);
+  const [panFront, setPanFront] = useState(null);
+  const [panBack, setPanBack] = useState(null);
+  const [vInsurance, setVInsurance] = useState(null);
   const [dLFront, setDLFront] = useState(null);
   const [dLBack, setDLBack] = useState(null);
   const [rCFront, setRCFront] = useState(null);
@@ -114,6 +119,10 @@ const CreateDriver = () => {
       !profilePic ||
       !aadharFront ||
       !aadharBack ||
+      !panFront ||
+      !panBack ||
+      !vInsurance ||
+      !accountNumber ||
       !dLFront ||
       !dLBack ||
       !rCFront ||
@@ -125,7 +134,7 @@ const CreateDriver = () => {
       !vModel ||
       !rent
     ) {
-      return alert("Upload all Images...");
+      return alert("Missing Data...");
     }
     try {
       setLoading(true);
@@ -149,6 +158,10 @@ const CreateDriver = () => {
         setDLBack(null);
         setRCFront(null);
         setRCBack(null);
+        setVInsurance(null);
+        setPanFront(null);
+        setPanBack(null);
+        setAccountNumber("");
         setName("");
         setDNumber("");
         setDEmail("");
@@ -168,6 +181,10 @@ const CreateDriver = () => {
         setDLBack(null);
         setRCFront(null);
         setRCBack(null);
+        setVInsurance(null);
+        setPanFront(null);
+        setPanBack(null);
+        setAccountNumber("");
         setName("");
         setDNumber("");
         setDEmail("");
@@ -185,6 +202,9 @@ const CreateDriver = () => {
       const dlBackRef = ref(storage, `drivers/${dNumber}/dlBack`);
       const rcFrontRef = ref(storage, `drivers/${dNumber}/rcFront`);
       const rcBackRef = ref(storage, `drivers/${dNumber}/rcBack`);
+      const panFrontRef = ref(storage, `drivers/${dNumber}/panFront`);
+      const panBackRef = ref(storage, `drivers/${dNumber}/panBack`);
+      const insuranceRef = ref(storage, `drivers/${dNumber}/insurance`);
       const profilePicURL = await uploadImageAsync(
         profilePic.uri,
         profilePicRef
@@ -201,6 +221,9 @@ const CreateDriver = () => {
       const dlBackURL = await uploadImageAsync(dLBack.uri, dlBackRef);
       const rcFrontURL = await uploadImageAsync(rCFront.uri, rcFrontRef);
       const rcBackURL = await uploadImageAsync(rCBack.uri, rcBackRef);
+      const panFrontURL = await uploadImageAsync(panFront.uri, panFrontRef);
+      const panBackURL = await uploadImageAsync(panBack.uri, panBackRef);
+      const insuranceURL = await uploadImageAsync(vInsurance.uri, insuranceRef);
       const driver_obj = {
         name,
         profilePic: { url: profilePicURL, type: profilePic.type },
@@ -210,11 +233,15 @@ const CreateDriver = () => {
         rcBack: { url: rcBackURL, type: rCBack.type },
         dlFront: { url: dlFrontURL, type: dLFront.type },
         dlBack: { url: dlBackURL, type: dLBack.type },
+        panFront: { url: panFrontURL, type: panFront.type },
+        panBack: { url: panBackURL, type: panBack.type },
+        insurance: { url: insuranceURL, type: vInsurance.type },
         dNumber: "+91 " + dNumber,
         dEmail,
         vNumber: vNumber.toUpperCase(),
         vModel,
         rent: +rent,
+        accountNumber,
         status: "Active",
       };
       const response = await fetch(`${API_URL}/api/auth/createDriver`, {
@@ -241,6 +268,10 @@ const CreateDriver = () => {
       setDLBack(null);
       setRCFront(null);
       setRCBack(null);
+      setVInsurance(null);
+      setPanFront(null);
+      setPanBack(null);
+      setAccountNumber("");
       setName("");
       setDNumber("");
       setDEmail("");
@@ -270,10 +301,6 @@ const CreateDriver = () => {
     setPhone(null);
     setUser(null);
   };
-
-  useEffect(() => {
-    profileAnimationRef.current?.play();
-  }, [profilePic]);
 
   if (loading) {
     return <Loader />;
@@ -329,15 +356,16 @@ const CreateDriver = () => {
                     style={{
                       width: 200,
                       height: 200,
-                      alignItems: 'center',
-                      justifyContent: 'center'
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <LottieView
+                      autoPlay
                       ref={profileAnimationRef}
                       style={{
-                        width: 280,
-                        height: 280,
+                        width: 180,
+                        height: 180,
                       }}
                       resizeMode="cover"
                       source={Profile_JSON}
@@ -351,50 +379,109 @@ const CreateDriver = () => {
                 )}
               </TouchableOpacity>
             </View>
-            <Input
-              value={name}
-              onChangeText={(e) => setName(e)}
-              placeholder="Parth Yadav"
-              label="Name"
-              labelStyle={{
-                color: "#000",
-                fontWeight: "100",
-                marginBottom: 5,
-                fontSize: 14,
-              }}
-              errorStyle={{ display: "none" }}
-              inputContainerStyle={{
-                borderWidth: 1,
-                paddingHorizontal: 15,
-                paddingVertical: 4,
-                borderRadius: 10,
-              }}
-              inputStyle={{ fontSize: 16 }}
-            />
-            <Input
-              placeholder="XY88 XY8888"
-              value={vNumber}
-              onChangeText={(e) => setVNumber(e)}
-              label="Vehicle Number"
-              errorStyle={{ display: "none" }}
-              labelStyle={{
-                color: "#000",
-                fontWeight: "100",
-                marginBottom: 5,
-                fontSize: 14,
-              }}
-              inputContainerStyle={{
-                borderWidth: 1,
-                paddingHorizontal: 15,
-                paddingVertical: 4,
-                borderRadius: 10,
-              }}
-              inputStyle={{ fontSize: 16 }}
-            />
-            <View style={{ paddingHorizontal: 10 }}>
+            <Text style={{ fontSize: 26 }}>Personal Details</Text>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Name
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                value={name}
+                onChangeText={(e) => setName(e)}
+                placeholder="Parth Yadav"
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Driver Number
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="931XXXX594"
+                value={dNumber}
+                onChangeText={(e) => setDNumber(e)}
+                keyboardType="numeric"
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Driver Email
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="test@gmail.com"
+                value={dEmail}
+                onChangeText={(e) => setDEmail(e)}
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Account Number
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="1266XXXXXXXX"
+                value={accountNumber}
+                onChangeText={(e) => setAccountNumber(e)}
+                keyboardType="numeric"
+              />
+            </View>
+            <Text style={{ fontSize: 26, marginTop: 20 }}>Vehicle Details</Text>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Vehicle Number
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="XY88 XY8888"
+                value={vNumber}
+                onChangeText={(e) => setVNumber(e)}
+              />
+            </View>
+            <View>
               <Text
                 style={{
-                  color: "#000",
+                  color: "#5f5f5f",
                   marginBottom: 5,
                   fontSize: 14,
                 }}
@@ -405,82 +492,106 @@ const CreateDriver = () => {
                 setSelected={(val) => setVModel(val)}
                 data={data}
                 save="value"
-                boxStyles={{}}
-                inputStyles={{ fontSize: 16 }}
+                boxStyles={{
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  borderWidth: 0,
+                  elevation: 1,
+                }}
+                inputStyles={{ fontSize: 14 }}
                 search={false}
                 defaultOption={{ key: "Piaggio Ev 3W", value: "Piaggio Ev 3W" }}
+                dropdownStyles={{
+                  backgroundColor: "#F9F9F8",
+                  borderWidth: 0,
+                  elevation: 1,
+                }}
               />
             </View>
-            <Input
-              placeholder="931XXXX594"
-              value={dNumber}
-              onChangeText={(e) => setDNumber(e)}
-              keyboardType="numeric"
-              errorStyle={{ display: "none" }}
-              label="Driver Number"
-              labelStyle={{
-                color: "#000",
-                fontWeight: "100",
-                marginBottom: 5,
-                fontSize: 14,
-              }}
-              inputContainerStyle={{
-                borderWidth: 1,
-                paddingHorizontal: 15,
-                paddingVertical: 4,
-                borderRadius: 10,
-              }}
-              inputStyle={{ fontSize: 16 }}
-            />
-            <Input
-              placeholder="test@gmail.com"
-              value={dEmail}
-              onChangeText={(e) => setDEmail(e)}
-              errorStyle={{ display: "none" }}
-              label="Driver Email"
-              labelStyle={{
-                color: "#000",
-                fontWeight: "100",
-                marginBottom: 5,
-                fontSize: 14,
-              }}
-              inputContainerStyle={{
-                borderWidth: 1,
-                paddingHorizontal: 15,
-                paddingVertical: 4,
-                borderRadius: 10,
-              }}
-              inputStyle={{ fontSize: 16 }}
-            />
-            <Input
-              placeholder="&#8377; 800"
-              value={rent}
-              onChangeText={(e) => setRent(e)}
-              errorStyle={{ display: "none" }}
-              keyboardType="numeric"
-              label="Rent"
-              labelStyle={{
-                color: "#000",
-                fontWeight: "100",
-                marginBottom: 5,
-                fontSize: 14,
-              }}
-              inputContainerStyle={{
-                borderWidth: 1,
-                paddingHorizontal: 15,
-                paddingVertical: 4,
-                borderRadius: 10,
-              }}
-              inputStyle={{ fontSize: 16 }}
-            />
-            <View style={{ flexDirection: "row" }}>
-              <Input
-                containerStyle={{
-                  width: "50%",
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Vehicle Rent
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
                 }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="&#8377; 800"
+                value={rent}
+                onChangeText={(e) => setRent(e)}
                 errorStyle={{ display: "none" }}
-                editable={false}
-                rightIcon={
+                keyboardType="numeric"
+              />
+            </View>
+            <Text style={{ fontSize: 26, marginTop: 20 }}>
+              Upload Documents
+            </Text>
+            <View>
+              <View
+                style={{
+                  marginBottom: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ fontSize: 14, color: "#5f5f5f" }}>
+                  Aadhar Card
+                </Text>
+                <View
+                  style={{
+                    display: aadharFront && aadharBack ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="checkcircle"
+                    size={16}
+                    color="green"
+                    type="antdesign"
+                  />
+                </View>
+                <View
+                  style={{
+                    display: aadharFront && aadharBack ? "none" : "flex",
+                  }}
+                >
+                  <Icon
+                    name="closecircle"
+                    size={16}
+                    color="red"
+                    type="antdesign"
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Front</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -518,35 +629,22 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                   </View>
-                }
-                rightIconContainerStyle={{ margin: 0, padding: 0 }}
-                label="Aadhar Card"
-                labelStyle={{
-                  color: "#000",
-                  fontWeight: "100",
-                  marginBottom: 5,
-                  fontSize: 14,
-                }}
-                placeholder="Front"
-                inputContainerStyle={{
-                  borderWidth: 1,
-                  paddingHorizontal: 10,
-                  borderColor: aadharFront ? "#07db00" : "#ff0000",
-                  borderRadius: 10,
-                }}
-                inputStyle={{ fontSize: 14 }}
-              />
-              <Input
-                label="."
-                labelStyle={{
-                  color: "#fff",
-                  fontWeight: "100",
-                  marginBottom: 5,
-                  fontSize: 14,
-                }}
-                errorStyle={{ display: "none" }}
-                editable={false}
-                rightIcon={
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Back</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -584,29 +682,214 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                   </View>
-                }
-                rightIconContainerStyle={{ margin: 0, padding: 0 }}
-                placeholder="Back"
-                containerStyle={{
-                  width: "50%",
-                }}
-                inputContainerStyle={{
-                  borderWidth: 1,
-                  paddingHorizontal: 10,
-                  borderColor: aadharBack ? "#07db00" : "#ff0000",
-                  borderRadius: 10,
-                }}
-                inputStyle={{ fontSize: 14 }}
-              />
+                </View>
+              </View>
             </View>
-            <View style={{ flexDirection: "row" }}>
-              <Input
-                containerStyle={{
-                  width: "50%",
+            <View>
+              <View
+                style={{
+                  marginBottom: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-                errorStyle={{ display: "none" }}
-                editable={false}
-                rightIcon={
+              >
+                <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Pan Card</Text>
+                <View
+                  style={{
+                    display: panFront && panBack ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="checkcircle"
+                    size={16}
+                    color="green"
+                    type="antdesign"
+                  />
+                </View>
+                <View
+                  style={{
+                    display: panFront && panBack ? "none" : "flex",
+                  }}
+                >
+                  <Icon
+                    name="closecircle"
+                    size={16}
+                    color="red"
+                    type="antdesign"
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Front</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => pickDocument(setPanFront)}>
+                      <Icon
+                        name="documents-outline"
+                        size={22}
+                        color="gray"
+                        type="ionicon"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => pickImageCamera(setPanFront)}
+                    >
+                      <Icon
+                        name="camerao"
+                        size={22}
+                        color="gray"
+                        type="antdesign"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => pickImage(setPanFront)}>
+                      <Icon
+                        name="upload"
+                        size={20}
+                        color="gray"
+                        type="antdesign"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Back</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => pickDocument(setPanBack)}>
+                      <Icon
+                        name="documents-outline"
+                        size={22}
+                        color="gray"
+                        type="ionicon"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => pickImageCamera(setPanBack)}
+                    >
+                      <Icon
+                        name="camerao"
+                        size={22}
+                        color="gray"
+                        type="antdesign"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => pickImage(setPanBack)}>
+                      <Icon
+                        name="upload"
+                        size={20}
+                        color="gray"
+                        type="antdesign"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View>
+              <View
+                style={{
+                  marginBottom: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ fontSize: 14, color: "#5f5f5f" }}>DL</Text>
+                <View
+                  style={{
+                    display: dLFront && dLBack ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="checkcircle"
+                    size={16}
+                    color="green"
+                    type="antdesign"
+                  />
+                </View>
+                <View
+                  style={{
+                    display: dLFront && dLBack ? "none" : "flex",
+                  }}
+                >
+                  <Icon
+                    name="closecircle"
+                    size={16}
+                    color="red"
+                    type="antdesign"
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Front</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -642,35 +925,22 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                   </View>
-                }
-                rightIconContainerStyle={{ margin: 0, padding: 0 }}
-                label="Driving License"
-                labelStyle={{
-                  color: "#000",
-                  fontWeight: "100",
-                  marginBottom: 5,
-                  fontSize: 14,
-                }}
-                placeholder="Front"
-                inputContainerStyle={{
-                  borderWidth: 1,
-                  paddingHorizontal: 10,
-                  borderColor: dLFront ? "#07db00" : "#ff0000",
-                  borderRadius: 10,
-                }}
-                inputStyle={{ fontSize: 14 }}
-              />
-              <Input
-                label="."
-                labelStyle={{
-                  color: "#fff",
-                  fontWeight: "100",
-                  marginBottom: 5,
-                  fontSize: 14,
-                }}
-                errorStyle={{ display: "none" }}
-                editable={false}
-                rightIcon={
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Back</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -706,29 +976,67 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                   </View>
-                }
-                rightIconContainerStyle={{ margin: 0, padding: 0 }}
-                placeholder="Back"
-                containerStyle={{
-                  width: "50%",
-                }}
-                inputContainerStyle={{
-                  borderWidth: 1,
-                  paddingHorizontal: 10,
-                  borderColor: dLBack ? "#07db00" : "#ff0000",
-                  borderRadius: 10,
-                }}
-                inputStyle={{ fontSize: 14 }}
-              />
+                </View>
+              </View>
             </View>
-            <View style={{ flexDirection: "row" }}>
-              <Input
-                containerStyle={{
-                  width: "50%",
+            <View>
+              <View
+                style={{
+                  marginBottom: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-                editable={false}
-                errorStyle={{ display: "none" }}
-                rightIcon={
+              >
+                <Text style={{ fontSize: 14, color: "#5f5f5f" }}>RC</Text>
+                <View
+                  style={{
+                    display: rCFront && rCBack ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="checkcircle"
+                    size={16}
+                    color="green"
+                    type="antdesign"
+                  />
+                </View>
+                <View
+                  style={{
+                    display: rCFront && rCBack ? "none" : "flex",
+                  }}
+                >
+                  <Icon
+                    name="closecircle"
+                    size={16}
+                    color="red"
+                    type="antdesign"
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Front</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -764,35 +1072,22 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                   </View>
-                }
-                rightIconContainerStyle={{ margin: 0, padding: 0 }}
-                label="RC"
-                labelStyle={{
-                  color: "#000",
-                  fontWeight: "100",
-                  marginBottom: 5,
-                  fontSize: 14,
-                }}
-                placeholder="Front"
-                inputContainerStyle={{
-                  borderWidth: 1,
-                  paddingHorizontal: 10,
-                  borderColor: rCFront ? "#07db00" : "#ff0000",
-                  borderRadius: 10,
-                }}
-                inputStyle={{ fontSize: 14 }}
-              />
-              <Input
-                label="."
-                labelStyle={{
-                  color: "#fff",
-                  fontWeight: "100",
-                  marginBottom: 5,
-                  fontSize: 14,
-                }}
-                errorStyle={{ display: "none" }}
-                editable={false}
-                rightIcon={
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "48%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Back</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -828,24 +1123,112 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                   </View>
-                }
-                rightIconContainerStyle={{ margin: 0, padding: 0 }}
-                placeholder="Back"
-                containerStyle={{
-                  width: "50%",
+                </View>
+              </View>
+            </View>
+            <View>
+              <View
+                style={{
+                  marginBottom: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-                inputContainerStyle={{
-                  borderWidth: 1,
-                  paddingHorizontal: 10,
-                  borderColor: rCBack ? "#07db00" : "#ff0000",
-                  borderRadius: 10,
+              >
+                <Text style={{ fontSize: 14, color: "#5f5f5f" }}>
+                  Insurance
+                </Text>
+                <View
+                  style={{
+                    display: vInsurance ? "flex" : "none",
+                  }}
+                >
+                  <Icon
+                    name="checkcircle"
+                    size={16}
+                    color="green"
+                    type="antdesign"
+                  />
+                </View>
+                <View
+                  style={{
+                    display: vInsurance ? "none" : "flex",
+                  }}
+                >
+                  <Icon
+                    name="closecircle"
+                    size={16}
+                    color="red"
+                    type="antdesign"
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-                inputStyle={{ fontSize: 14 }}
-              />
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: "#F9F9F8",
+                    paddingHorizontal: 15,
+                    paddingVertical: 15,
+                    borderRadius: 5,
+                    fontSize: 14,
+                    elevation: 1,
+                    width: "100%",
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Front</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => pickDocument(setVInsurance)}
+                    >
+                      <Icon
+                        name="documents-outline"
+                        size={22}
+                        color="gray"
+                        type="ionicon"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => pickImageCamera(setVInsurance)}
+                    >
+                      <Icon
+                        name="camerao"
+                        size={22}
+                        color="gray"
+                        type="antdesign"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => pickImage(setVInsurance)}>
+                      <Icon
+                        name="upload"
+                        size={20}
+                        color="gray"
+                        type="antdesign"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={{ width: "70%" }} onPress={handleSubmit}>
+            <TouchableOpacity style={{ width: "100%" }} onPress={handleSubmit}>
               <Text style={styles.button}>Add Driver</Text>
             </TouchableOpacity>
           </View>
@@ -859,7 +1242,7 @@ export default CreateDriver;
 
 const styles = StyleSheet.create({
   containerWrapper: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     paddingVertical: 20,
     backgroundColor: "#fff",
   },
@@ -885,14 +1268,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 30,
+    marginTop: 40,
   },
   button: {
-    backgroundColor: "#3bbcc5",
+    backgroundColor: "#000",
     color: "#fff",
     textAlign: "center",
-    paddingVertical: 15,
-    borderRadius: 3,
+    paddingVertical: 18,
+    borderRadius: 5,
     fontSize: 16,
   },
 });

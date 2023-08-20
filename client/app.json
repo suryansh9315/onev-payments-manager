@@ -24,7 +24,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.onev.fleetops",
-      "versionCode": 1,
+      "versionCode": 3,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -34,7 +34,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/splash_small.png",
+          "icon": "./assets/paycol_3.png",
           "color": "#0051c3"
         }
       ],

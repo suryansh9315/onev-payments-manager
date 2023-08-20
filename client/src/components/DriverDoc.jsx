@@ -12,10 +12,13 @@ const DriverDoc = ({ item }) => {
   const imageLinks = [
     { url: item?.aadharFront, label: "Aadhar Front" },
     { url: item?.aadharBack, label: "Aadhar Back" },
+    { url: item?.panFront, label: "Pan Front" },
+    { url: item?.panBack, label: "Pan Back" },
     { url: item?.rcFront, label: "RC Front" },
     { url: item?.rcFront, label: "RC Back" },
     { url: item?.dlFront, label: "DL Front" },
     { url: item?.dlBack, label: "DL Back" },
+    { url: item?.insurance, label: "Insurance" },
   ];
 
   const openURL = async (downloadUrl) => {

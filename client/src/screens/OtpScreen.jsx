@@ -108,7 +108,10 @@ const OtpScreen = ({ navigation }) => {
       const json = await response.json();
       if (response.status === 200) {
         if (!isAdmin) {
-          const noti_token = await registerForPushNotificationsAsync();
+          let noti_token = "";
+          try {
+            noti_token = await registerForPushNotificationsAsync();
+          } catch (error) {}
           console.log(noti_token);
           if (noti_token) {
             json.user.noti_token = noti_token;

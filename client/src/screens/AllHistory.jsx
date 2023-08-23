@@ -38,6 +38,8 @@ const AllHistory = () => {
   const [allTimeEarn, setAllTimeEarn] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
+  const [searchOrders, setSearchOrders] = useState([]);
+  const [filterText, setFiltertext] = useState("All");
 
   const fetchData = async () => {
     setLoading(true);
@@ -74,6 +76,7 @@ const AllHistory = () => {
         unsorted_orders.sort((a, b) => b.created_at - a.created_at);
         setOrders(unsorted_orders);
         setFilteredOrders(unsorted_orders);
+        // setSearchOrders(unsorted_orders)
       } else {
         alert(`${json.message}`);
       }
@@ -87,7 +90,9 @@ const AllHistory = () => {
 
   const handleSearch = () => {
     if (searchInput.length === 0) {
-      return setFilteredOrders(orders);
+      setSearchOrders(orders);
+      setFilteredOrders(orders);
+      return;
     }
     setFilteredOrders(
       orders.filter(
@@ -96,11 +101,34 @@ const AllHistory = () => {
           order?.driver_number.includes(searchInput)
       )
     );
+    // setSearchOrders(
+    //   orders.filter(
+    //     (order) =>
+    //       order?.driver_name.includes(searchInput) ||
+    //       order?.driver_number.includes(searchInput)
+    //   )
+    // );
+  };
+
+  const handlePress = (filter) => {
+    if (filter === "Unverified") {
+      setFilteredOrders(
+        orders.filter((order) => order?.status === "created")
+      );
+    } else if (filter === "Verified") {
+      setFilteredOrders(
+        orders.filter((order) => order?.status === "Paid")
+      );
+    } else {
+      setFilteredOrders(orders);
+    }
+    setFiltertext(filter);
   };
 
   useEffect(() => {
     if (isFocused) {
       fetchData();
+      setFiltertext("All")
     }
   }, [isFocused]);
 
@@ -213,6 +241,62 @@ const AllHistory = () => {
               inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
             />
           </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                backgroundColor: filterText === "All" ? "#005EFF" : "#f9f9f8",
+                elevation: 1,
+                borderRadius: 10,
+              }}
+              onPress={() => handlePress("All")}
+            >
+              <Text style={{ color: filterText === "All" ? "#fff" : "#000" }}>
+                All
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                backgroundColor:
+                  filterText === "Verified" ? "#005EFF" : "#f9f9f8",
+                elevation: 1,
+                borderRadius: 10,
+              }}
+              onPress={() => handlePress("Verified")}
+            >
+              <Text
+                style={{ color: filterText === "Verified" ? "#fff" : "#000" }}
+              >
+                Verified
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                backgroundColor:
+                  filterText === "Unverified" ? "#005EFF" : "#f9f9f8",
+                elevation: 1,
+                borderRadius: 10,
+              }}
+              onPress={() => handlePress("Unverified")}
+            >
+              <Text
+                style={{ color: filterText === "Unverified" ? "#fff" : "#000" }}
+              >
+                Unverified
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View>
             {filteredOrders.map((item) => (
               <TouchableOpacity
@@ -223,6 +307,13 @@ const AllHistory = () => {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-between",
+                }}
+                onPress={() => {
+                  if (item.type === "QR_Online") {
+                    navigation.navigate("SinglePaymentAll", {
+                      paymentDetails: item,
+                    });
+                  }
                 }}
               >
                 <View style={{ gap: 5 }}>

@@ -41,6 +41,7 @@ const CreateDriver = () => {
   const [phone, setPhone] = useRecoilState(number);
   const [name, setName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+  const [accountIFSC, setAccountIFSC] = useState("");
   const [dNumber, setDNumber] = useState("");
   const [dEmail, setDEmail] = useState("");
   const [vNumber, setVNumber] = useState("");
@@ -50,7 +51,6 @@ const CreateDriver = () => {
   const [aadharFront, setAadharFront] = useState(null);
   const [aadharBack, setAadharBack] = useState(null);
   const [panFront, setPanFront] = useState(null);
-  const [panBack, setPanBack] = useState(null);
   const [vInsurance, setVInsurance] = useState(null);
   const [dLFront, setDLFront] = useState(null);
   const [dLBack, setDLBack] = useState(null);
@@ -120,9 +120,9 @@ const CreateDriver = () => {
       !aadharFront ||
       !aadharBack ||
       !panFront ||
-      !panBack ||
       !vInsurance ||
       !accountNumber ||
+      !accountIFSC ||
       !dLFront ||
       !dLBack ||
       !rCFront ||
@@ -160,7 +160,7 @@ const CreateDriver = () => {
         setRCBack(null);
         setVInsurance(null);
         setPanFront(null);
-        setPanBack(null);
+        setAccountIFSC("");
         setAccountNumber("");
         setName("");
         setDNumber("");
@@ -183,7 +183,7 @@ const CreateDriver = () => {
         setRCBack(null);
         setVInsurance(null);
         setPanFront(null);
-        setPanBack(null);
+        setAccountIFSC("");
         setAccountNumber("");
         setName("");
         setDNumber("");
@@ -203,7 +203,6 @@ const CreateDriver = () => {
       const rcFrontRef = ref(storage, `drivers/${dNumber}/rcFront`);
       const rcBackRef = ref(storage, `drivers/${dNumber}/rcBack`);
       const panFrontRef = ref(storage, `drivers/${dNumber}/panFront`);
-      const panBackRef = ref(storage, `drivers/${dNumber}/panBack`);
       const insuranceRef = ref(storage, `drivers/${dNumber}/insurance`);
       const profilePicURL = await uploadImageAsync(
         profilePic.uri,
@@ -222,7 +221,6 @@ const CreateDriver = () => {
       const rcFrontURL = await uploadImageAsync(rCFront.uri, rcFrontRef);
       const rcBackURL = await uploadImageAsync(rCBack.uri, rcBackRef);
       const panFrontURL = await uploadImageAsync(panFront.uri, panFrontRef);
-      const panBackURL = await uploadImageAsync(panBack.uri, panBackRef);
       const insuranceURL = await uploadImageAsync(vInsurance.uri, insuranceRef);
       const driver_obj = {
         name,
@@ -234,7 +232,6 @@ const CreateDriver = () => {
         dlFront: { url: dlFrontURL, type: dLFront.type },
         dlBack: { url: dlBackURL, type: dLBack.type },
         panFront: { url: panFrontURL, type: panFront.type },
-        panBack: { url: panBackURL, type: panBack.type },
         insurance: { url: insuranceURL, type: vInsurance.type },
         dNumber: "+91 " + dNumber,
         dEmail,
@@ -242,7 +239,8 @@ const CreateDriver = () => {
         vModel,
         rent: +rent,
         accountNumber,
-        status: "Active",
+        accountIFSC,
+        status: "Inactive",
       };
       const response = await fetch(`${API_URL}/api/auth/createDriver`, {
         method: "POST",
@@ -270,7 +268,7 @@ const CreateDriver = () => {
       setRCBack(null);
       setVInsurance(null);
       setPanFront(null);
-      setPanBack(null);
+      setAccountIFSC("")
       setAccountNumber("");
       setName("");
       setDNumber("");
@@ -438,6 +436,7 @@ const CreateDriver = () => {
                 onChangeText={(e) => setDEmail(e)}
               />
             </View>
+            <Text style={{ fontSize: 26, marginTop: 20 }}>Account Details</Text>
             <View>
               <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
                 Account Number
@@ -456,6 +455,25 @@ const CreateDriver = () => {
                 value={accountNumber}
                 onChangeText={(e) => setAccountNumber(e)}
                 keyboardType="numeric"
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Account IFSC Code
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="HDFC000XXXX"
+                value={accountIFSC}
+                onChangeText={(e) => setAccountIFSC(e)}
               />
             </View>
             <Text style={{ fontSize: 26, marginTop: 20 }}>Vehicle Details</Text>
@@ -697,7 +715,7 @@ const CreateDriver = () => {
                 <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Pan Card</Text>
                 <View
                   style={{
-                    display: panFront && panBack ? "flex" : "none",
+                    display: panFront ? "flex" : "none",
                   }}
                 >
                   <Icon
@@ -709,7 +727,7 @@ const CreateDriver = () => {
                 </View>
                 <View
                   style={{
-                    display: panFront && panBack ? "none" : "flex",
+                    display: panFront ? "none" : "flex",
                   }}
                 >
                   <Icon
@@ -739,7 +757,7 @@ const CreateDriver = () => {
                     borderRadius: 5,
                     fontSize: 14,
                     elevation: 1,
-                    width: "48%",
+                    width: "100%",
                   }}
                 >
                   <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Front</Text>
@@ -770,57 +788,6 @@ const CreateDriver = () => {
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => pickImage(setPanFront)}>
-                      <Icon
-                        name="upload"
-                        size={20}
-                        color="gray"
-                        type="antdesign"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    backgroundColor: "#F9F9F8",
-                    paddingHorizontal: 15,
-                    paddingVertical: 15,
-                    borderRadius: 5,
-                    fontSize: 14,
-                    elevation: 1,
-                    width: "48%",
-                  }}
-                >
-                  <Text style={{ fontSize: 14, color: "#5f5f5f" }}>Back</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <TouchableOpacity onPress={() => pickDocument(setPanBack)}>
-                      <Icon
-                        name="documents-outline"
-                        size={22}
-                        color="gray"
-                        type="ionicon"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => pickImageCamera(setPanBack)}
-                    >
-                      <Icon
-                        name="camerao"
-                        size={22}
-                        color="gray"
-                        type="antdesign"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => pickImage(setPanBack)}>
                       <Icon
                         name="upload"
                         size={20}
@@ -1271,7 +1238,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: "#000",
+    backgroundColor: "#005EFF",
     color: "#fff",
     textAlign: "center",
     paddingVertical: 18,

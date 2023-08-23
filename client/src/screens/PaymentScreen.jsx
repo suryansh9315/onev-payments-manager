@@ -25,8 +25,21 @@ const PaymentScreen = () => {
   const { top } = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
 
+  const handlePaymentQr = async () => {
+    if (driver_info.status === "Inactive")
+      return alert(
+        "Driver Inactive. Contact system administrator to activate your account."
+      );
+    if (payment < 500)
+      return alert("Online Payments of less than 500 are not allowed.");
+    navigation.navigate("QRCodePayment", {
+      amount: payment,
+    });
+  };
+
   const handlePayment = async () => {
-    if (payment < 500) return alert("Online Payments of less than 500 are not allowed.");
+    if (payment < 500)
+      return alert("Online Payments of less than 500 are not allowed.");
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/api/orders/createOrder`, {
@@ -173,7 +186,10 @@ const PaymentScreen = () => {
             Move the dial to pay more or less to earn points.
           </Text>
         </View>
-        <CircularSlider payment={payment > 5000 ? 5000 : payment} setPayment={setPayment} />
+        <CircularSlider
+          payment={payment > 5000 ? 5000 : payment}
+          setPayment={setPayment}
+        />
         <View
           style={{
             position: "absolute",
@@ -184,15 +200,15 @@ const PaymentScreen = () => {
         >
           <TouchableOpacity
             style={{ width: "100%", alignItems: "center" }}
-            onPress={handlePayment}
+            onPress={handlePaymentQr}
           >
             <Text
               style={{
-                backgroundColor: "#F75428",
+                backgroundColor: "#005EFF",
                 paddingVertical: 15,
                 width: "90%",
                 textAlign: "center",
-                borderRadius: 10,
+                borderRadius: 8,
                 color: "#fff",
                 fontSize: 16,
                 fontWeight: 600,

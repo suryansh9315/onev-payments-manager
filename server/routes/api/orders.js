@@ -59,6 +59,98 @@ app.post("/createOrder", verifyToken, verifyDriver, async (req, res) => {
   }
 });
 
+app.post("/createQROrder", verifyToken, verifyDriver, async (req, res) => {
+  if (
+    !req.body.amount ||
+    typeof req.body.amount !== "number" ||
+    req.body.amount <= 1 ||
+    !req.body.screenshot
+  ) {
+    return res.status(400).json({ message: "Missing Fields" });
+  }
+  const amount = req.body.amount * 100;
+  const receipt = req.driver._id + "_" + Date.now();
+  const order_id = "order " + crypto.randomBytes(15).toString("hex");
+  const txnId =
+    req.driver._id +
+    "_" +
+    Date.now() +
+    "_" +
+    crypto.randomBytes(8).toString("hex");
+  try {
+    const order_object = {
+      driver_id: req.driver._id,
+      driver_name: req.driver.name,
+      driver_number: req.driver.dNumber,
+      txnId,
+      type: "QR_Online",
+      amount,
+      amount_paid: amount,
+      amount_due: 0,
+      currency: "INR",
+      receipt,
+      partial_payment: false,
+      status: "created",
+      created_at: Date.now(),
+      screenshot: req.body.screenshot,
+      id: order_id,
+    };
+    const newOrder = await orders.insertOne(order_object);
+    res
+      .status(200)
+      .json({ message: "Order created successfully.", order_id, txnId });
+  } catch (error) {
+    res.status(400).json({ message: error?.error?.description });
+  }
+});
+
+app.post("/updateQROrder", verifyToken, verifyManager, async (req, res) => {
+  if (!req.body.order_id || !req.body.currentStatus) {
+    return res.status(400).json({ message: "Missing Fields" });
+  }
+  try {
+    const order_id = req.body.order_id;
+    const old_status = req.body.currentStatus;
+    const query = { id: order_id };
+    const old_order = await orders.findOne(query);
+    const update = {
+      $set: {
+        status: old_status === "Paid" ? "created" : "Paid",
+      },
+    };
+    const options = { upsert: false };
+    const result = await orders.updateOne(query, update, options);
+    const { matchedCount, modifiedCount } = result;
+    if (matchedCount !== modifiedCount) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Something went wrong.",
+      });
+    }
+    const driver_query = { _id: old_order.driver_id }
+    const old_driver = await drivers.findOne(driver_query)
+    const paid_amount = old_order.amount / 100
+    const driver_update = {
+      $set: {
+        balance: old_driver.balance + paid_amount,
+        Paid: old_driver.Paid + paid_amount,
+      },
+    };
+    const driver_result = await drivers.updateOne(driver_query, driver_update, options);
+    if (driver_result.matchedCount !== driver_result.modifiedCount) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Something went wrong.",
+      });
+    }
+    res
+      .status(200)
+      .json({ message: "Payment Status Updated." });
+  } catch (error) {
+    res.status(400).json({ message: error?.error?.description });
+  }
+});
+
 app.get("/fetchAllOrders", verifyToken, verifyManager, async (req, res) => {
   try {
     const response = await instance.orders.all();
@@ -81,6 +173,7 @@ app.post("/createCashOrder", verifyToken, verifyManager, async (req, res) => {
   const oldDriver = await drivers.findOne(driver_query);
   const amount = req.body.amount * 100;
   const receipt = oldDriver._id + "_" + Date.now();
+  const order_id = "order " + crypto.randomBytes(15).toString("hex");
   const txnId =
     oldDriver._id +
     "_" +
@@ -103,7 +196,8 @@ app.post("/createCashOrder", verifyToken, verifyManager, async (req, res) => {
       driver_name: oldDriver.name,
       driver_number: oldDriver.dNumber,
       admin_name: req.manager.name,
-      admin_number: req.manager.number
+      admin_number: req.manager.number,
+      id: order_id,
     };
     const newOrder = await orders.insertOne(order_object);
     const options = { upsert: false };

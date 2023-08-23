@@ -62,30 +62,8 @@ const CustomDrawer = (props) => {
   };
 
   return (
-    <DrawerContentScrollView
-      {...props}
-      style={{ backgroundColor: '#fe8f01' }}
-    >
-      <View
-        style={{
-          position: "absolute",
-          zIndex: 1000,
-          width: "100%",
-          alignItems: "center",
-          top: 80,
-        }}
-      >
-        <Image
-          source={{ uri: user_info?.profilePic?.url }}
-          style={{
-            height: 100,
-            width: 100,
-            zIndex: 1000,
-            borderRadius: 60,
-          }}
-        />
-      </View>
-      <View style={{ height: 130, backgroundColor: "white" }}>
+    <DrawerContentScrollView {...props} style={{ backgroundColor: "#005EFF" }}>
+      <View style={{ height: 80, backgroundColor: "white" }}>
         <View
           style={{
             position: "absolute",
@@ -94,14 +72,14 @@ const CustomDrawer = (props) => {
             left: 0,
             right: 0,
             borderBottomRightRadius: 50,
-            backgroundColor: "#fe8f01"
+            backgroundColor: "#005EFF",
           }}
         />
       </View>
-      <View style={{ height: height - 130, backgroundColor: "white" }}>
+      <View style={{ height: height - 80, backgroundColor: "white" }}>
         <View
           style={{
-            backgroundColor: "#fe8f01",
+            backgroundColor: "#005EFF",
             flex: 1,
           }}
         />
@@ -119,7 +97,22 @@ const CustomDrawer = (props) => {
             gap: 15,
           }}
         >
-          <View style={{ alignItems: "center", paddingVertical: 15, gap: 5 }}>
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={{ uri: user_info?.profilePic?.url }}
+              style={{
+                height: 120,
+                width: 120,
+                zIndex: 1000,
+                borderRadius: 30,
+              }}
+            />
+          </View>
+          <View style={{ alignItems: "center", paddingVertical: 10, gap: 2 }}>
             <Text style={{ fontWeight: "500", fontSize: 24 }}>
               {user_info?.name}
             </Text>

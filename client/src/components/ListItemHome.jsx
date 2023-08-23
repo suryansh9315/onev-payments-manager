@@ -80,6 +80,35 @@ const ListItemHome = ({ item }) => {
                     fontWeight: "600",
                   }}
                 >
+                  DRIVER STATUS
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "300",
+                  }}
+                >
+                  {item?.status}
+                </Text>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
+                >
                   EMAIL
                 </Text>
                 <Text

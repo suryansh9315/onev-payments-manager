@@ -198,7 +198,7 @@ app.post("/createDriver", verifyToken, verifyManager, async (req, res) => {
   const driverObject = {
     ...req.body.driver_obj,
     payment_status: false,
-    balance: -req.body.driver_obj.rent,
+    balance: 0,
     date: Date.now(),
     admin_name: req.manager.name,
     admin_number: req.manager.number,

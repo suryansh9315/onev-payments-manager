@@ -17,6 +17,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const handlePaymentUpdate = async () => {
+    if (driver.status === "Inactive") return alert("Driver Inactive.");
     if (cash < 500) {
       return alert("Cash Deposits of less than 500 are not allowed.");
     }
@@ -144,7 +145,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             width: "100%",
             justifyContent: "space-between",
             paddingHorizontal: 30,
-            gap: 30
+            gap: 30,
           }}
         >
           <Image

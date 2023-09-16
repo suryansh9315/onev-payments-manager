@@ -8,7 +8,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { admin, number, sessionToken, user } from "../atoms/User";
+import { admin, number, sessionToken, user, verificationKey } from "../atoms/User";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Loader from "../components/Loader";
 import {
@@ -65,6 +65,7 @@ const OtpScreen = ({ navigation }) => {
   const isAdmin = useRecoilValue(admin);
   const phone = useRecoilValue(number);
   const [token, setToken] = useRecoilState(sessionToken);
+  const [vKey, setVKey] = useRecoilState(verificationKey);
   const [userr, setUser] = useRecoilState(user);
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -103,9 +104,11 @@ const OtpScreen = ({ navigation }) => {
           number: "+91 " + phone,
           otp: value,
           isManager: isAdmin,
+          verification_key: vKey
         }),
       });
       const json = await response.json();
+      console.log(json)
       if (response.status === 200) {
         if (!isAdmin) {
           let noti_token = "";
@@ -164,6 +167,7 @@ const OtpScreen = ({ navigation }) => {
       const json = await response.json();
       console.log(json);
       if (response.status === 200) {
+        setVKey(json.details)
         setLoading(false);
       } else {
         setLoading(false);

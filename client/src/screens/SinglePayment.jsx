@@ -1,4 +1,4 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "@rneui/themed";
@@ -13,8 +13,12 @@ const SinglePayment = ({ route, navigation }) => {
   const { paymentDetails } = route.params;
   const [loading, setLoading] = useState(false);
   const token = useRecoilValue(sessionToken);
+  const [amountReceived, setAmountReceived] = useState(0)
 
   const handleSubmit = async () => {
+    if (amountReceived <= 0) {
+      return alert("Enter Amount Received")
+    }
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/orders/updateQROrder`, {
@@ -27,6 +31,7 @@ const SinglePayment = ({ route, navigation }) => {
           token,
           currentStatus: paymentDetails?.status,
           order_id: paymentDetails?.id,
+          amountReceived
         }),
       });
       const jsonn = await res.json();
@@ -307,8 +312,25 @@ const SinglePayment = ({ route, navigation }) => {
             </View>
           </View>
         </View>
+        <View style={{ marginHorizontal: 30, marginTop: 20 }}>
+              <TextInput
+                style={{
+                  paddingHorizontal: 25,
+                  paddingVertical: 18,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="Enter Amount Received"
+                value={amountReceived}
+                onChangeText={(e) => setAmountReceived(+e)}
+                keyboardType="numeric"
+              />
+            </View>
         <View
-          style={{ paddingHorizontal: 30, marginTop: 20, marginBottom: 20 }}
+          style={{ paddingHorizontal: 30, marginTop: 40, marginBottom: 20 }}
         >
           <TouchableOpacity onPress={handleSubmit}>
             <Text

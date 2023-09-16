@@ -13,7 +13,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { CheckBox } from "@rneui/themed";
 import { useRecoilState } from "recoil";
-import { admin, number } from "../atoms/User";
+import { admin, number, verificationKey } from "../atoms/User";
 import Loader from "../components/Loader";
 import { useState } from "react";
 import { API_URL } from "@env";
@@ -24,6 +24,7 @@ const height = Dimensions.get("window").height;
 const LoginScreen = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [phone, setPhone] = useRecoilState(number);
+  const [vKey, setVKey] = useRecoilState(verificationKey);
   const [loading, setLoading] = useState(false);
 
   const requestOtp = async () => {
@@ -44,6 +45,7 @@ const LoginScreen = ({ navigation }) => {
       const json = await response.json();
       console.log(json);
       if (response.status === 200) {
+        setVKey(json.details)
         navigation.navigate("Otp");
         setLoading(false);
       } else {

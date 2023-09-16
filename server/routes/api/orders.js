@@ -105,17 +105,20 @@ app.post("/createQROrder", verifyToken, verifyDriver, async (req, res) => {
 });
 
 app.post("/updateQROrder", verifyToken, verifyManager, async (req, res) => {
-  if (!req.body.order_id || !req.body.currentStatus) {
+  if (!req.body.order_id || !req.body.currentStatus || !req.body.amountReceived) {
     return res.status(400).json({ message: "Missing Fields" });
   }
   try {
     const order_id = req.body.order_id;
+    const amount_received = req.body.amountReceived
     const old_status = req.body.currentStatus;
     const query = { id: order_id };
     const old_order = await orders.findOne(query);
     const update = {
       $set: {
         status: old_status === "Paid" ? "created" : "Paid",
+        amount: amount_received * 100,
+        amount_paid: amount_received * 100
       },
     };
     const options = { upsert: false };
@@ -129,11 +132,10 @@ app.post("/updateQROrder", verifyToken, verifyManager, async (req, res) => {
     }
     const driver_query = { _id: old_order.driver_id }
     const old_driver = await drivers.findOne(driver_query)
-    const paid_amount = old_order.amount / 100
     const driver_update = {
       $set: {
-        balance: old_driver.balance + paid_amount,
-        Paid: old_driver.Paid + paid_amount,
+        balance: old_driver.balance + amount_received,
+        Paid: old_driver.Paid + amount_received,
       },
     };
     const driver_result = await drivers.updateOne(driver_query, driver_update, options);

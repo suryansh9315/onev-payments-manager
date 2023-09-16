@@ -10,11 +10,42 @@ console.log(API_URL?.substring(0, 0));
 
 const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
   const [expanded, setExpanded] = useState(false);
+  const [newRent, setNewRent] = useState(0)
   const token = useRecoilValue(sessionToken);
   const [cash, setCash] = useState("");
   const docsRef = useRef();
   const [docs, setDocs] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const updateRent = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/updateRent`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          driver_id: driver._id,
+          newRent,
+        }),
+      });
+      const json = await response.json();
+      alert(`${json.message}`);
+      if (response.status === 400) {
+        logout();
+        return;
+      }
+      setReload(!reload);
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong...");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handlePaymentUpdate = async () => {
     if (driver.status === "Inactive") return alert("Driver Inactive.");
@@ -305,6 +336,24 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
           />
         </View>
+        <View style={{ marginTop: 0 }}>
+          <Input
+            onChangeText={(e) => setNewRent(+e)}
+            keyboardType="numeric"
+            value={newRent}
+            placeholder="Enter New Rent"
+            errorStyle={{ display: "none" }}
+            inputContainerStyle={{
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              backgroundColor: "#fff",
+              borderRadius: 4,
+              borderWidth: 1,
+              borderColor: "#bbbbbb",
+            }}
+            inputStyle={{ fontSize: 16, backgroundColor: "#fff" }}
+          />
+        </View>
         <View style={{ gap: 15 }}>
           <View
             style={{
@@ -369,17 +418,17 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
                 {docs ? "Hide Docs" : "View Docs"}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ width: 140 }}>
+            <TouchableOpacity style={{ width: 140 }} onPress={updateRent}>
               <Text
                 style={{
-                  backgroundColor: "#350000",
+                  backgroundColor: "#2c2c2c",
                   paddingVertical: 10,
                   color: "#fff",
                   textAlign: "center",
                   borderRadius: 4,
                 }}
               >
-                Delete
+                Update Rent
               </Text>
             </TouchableOpacity>
           </View>

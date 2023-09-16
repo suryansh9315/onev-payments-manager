@@ -5,7 +5,7 @@ const client = require("twilio")(
   process.env.TWILIO_AUTH_TOKEN
 );
 const { sign_jwt } = require("../../utils/jwt_helpers");
-const { verifyToken, verifyManager } = require("../../middlewares/auth");
+const { verifyToken, verifyManager, verifyDriver } = require("../../middlewares/auth");
 const { mongoClient } = require("../../database");
 const { ObjectId } = require("mongodb");
 
@@ -242,6 +242,39 @@ app.post("/checkToken", verifyToken, async (req, res) => {
   }
   res.status(200).json({ status: "success", message: "Token Valid.", user });
 });
+
+app.post("getDriverInfo", verifyToken, verifyDriver, async (req, res) => {
+  const driver_info = req.driver
+  res.status(200).json({ driver: driver_info })
+})
+
+app.post("updateRent", verifyToken, verifyManager, async (req, res) => {
+  if (!req.body.driver_id || !req.body.newRent) {
+    return res
+      .status(401)
+      .json({ status: "error", message: "Missing fields ..." });
+  }
+  try {
+    const query = { _id: req.body.driver_id }
+    const update = {
+      $set: {
+        rent: req.body.newRent,
+      },
+    };
+    const options = { upsert: false };
+    const result = await drivers.updateOne(query, update, options)
+    const { matchedCount, modifiedCount } = result;
+    if (matchedCount !== modifiedCount) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Something went wrong.",
+      });
+    }
+    res.status(200).json({message: "Successfully Updated Rent"})
+  } catch (error) {
+    return res.status(401).json({"message": 'Something went wrong'})
+  }
+})
 
 app.post("/getDriver", verifyToken, verifyManager, async (req, res) => {
   if (!req.body.dNumber) {

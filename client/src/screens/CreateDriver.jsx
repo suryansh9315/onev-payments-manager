@@ -115,26 +115,56 @@ const CreateDriver = () => {
   };
 
   const handleSubmit = async () => {
-    if (
-      !profilePic ||
-      !aadharFront ||
-      !aadharBack ||
-      !panFront ||
-      !vInsurance ||
-      !accountNumber ||
-      !accountIFSC ||
-      !dLFront ||
-      !dLBack ||
-      !rCFront ||
-      !rCBack ||
-      !dNumber ||
-      !dEmail ||
-      !name ||
-      !vNumber ||
-      !vModel ||
-      !rent
-    ) {
-      return alert("Missing Data...");
+    if (!profilePic) {
+      return alert("Please Upload Profile Picture");
+    }
+    if (!name) {
+      return alert("Please Enter Driver name");
+    }
+    if (!dNumber) {
+      return alert("Please Enter Driver Number");
+    }
+    if (!dEmail) {
+      return alert("Please Enter Driver Email");
+    }
+    if (!accountNumber) {
+      return alert("Please Enter Driver Account Number");
+    }
+    if (!accountIFSC) {
+      return alert("Please Enter Driver Account IFSC");
+    }
+    if (!vNumber) {
+      return alert("Please Enter Vehicle Number");
+    }
+    if (!vModel) {
+      return alert("Please Enter Vehicle Model");
+    }
+    if (!rent) {
+      return alert("Please Enter Vehicle Rent");
+    }
+    if (!aadharFront) {
+      return alert("Please Upload Aadhar Front");
+    }
+    if (!aadharBack) {
+      return alert("Please Upload Aadhar Back");
+    }
+    if (!panFront) {
+      return alert("Please Upload Pan Front");
+    }
+    if (!dLFront) {
+      return alert("Please Upload DL Front");
+    }
+    if (!dLBack) {
+      return alert("Please Upload DL Back");
+    }
+    if (!rCFront) {
+      return alert("Please Upload RC Front");
+    }
+    if (!rCBack) {
+      return alert("Please Upload RC Back");
+    }
+    if (!vInsurance) {
+      return alert("Please Upload Vehicle Insurance");
     }
     try {
       setLoading(true);
@@ -268,7 +298,7 @@ const CreateDriver = () => {
       setRCBack(null);
       setVInsurance(null);
       setPanFront(null);
-      setAccountIFSC("")
+      setAccountIFSC("");
       setAccountNumber("");
       setName("");
       setDNumber("");

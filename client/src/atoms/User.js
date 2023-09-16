@@ -19,3 +19,8 @@ export const user = atom({
   key: 'User',
   default: null,
 });
+
+export const verificationKey = atom({
+  key: 'VerificationKey',
+  default: null,
+});

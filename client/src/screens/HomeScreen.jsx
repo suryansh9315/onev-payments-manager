@@ -1,20 +1,35 @@
-import { FlatList, Animated, View, Text, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  Animated,
+  View,
+  Text,
+  TouchableOpacity,
+  ToastAndroid,
+} from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import React, { useRef } from "react";
-import { useRecoilValue } from "recoil";
-import { user } from "../atoms/User";
+import React, { useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import { admin, number, sessionToken, user } from "../atoms/User";
 import ListItemHome from "../components/ListItemHome";
 import Paginator from "../components/Paginator";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
+import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+console.log(API_URL?.substring(0, 0));
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
-  const user_info = useRecoilValue(user);
+  const [isAdmin, setIsAdmin] = useRecoilState(admin);
+  const [phone, setPhone] = useRecoilState(number);
+  const [user_info, setUser] = useRecoilState(user);
+  const [token, setToken] = useRecoilState(sessionToken);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const list = [
     {
       ...user_info,
@@ -40,6 +55,46 @@ const HomeScreen = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const listRef = useRef();
 
+  const deleteData = async () => {
+    try {
+      await AsyncStorage.removeItem("user_info");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const logout = () => {
+    deleteData();
+    setToken(null);
+    setIsAdmin(false);
+    setPhone(null);
+    setUser(null);
+  };
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/getDriverInfo`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+        }),
+      });
+      const json = await response.json();
+      if (response.status === 400) {
+        alert(`${json.message}`);
+        logout();
+        return;
+      }
+      setUser(json.driver);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -52,7 +107,7 @@ const HomeScreen = () => {
           top,
           left: 0,
           paddingHorizontal: 20,
-          paddingVertical: 20
+          paddingVertical: 20,
         }}
       >
         <Icon
@@ -67,7 +122,33 @@ const HomeScreen = () => {
           }}
         />
       </TouchableOpacity>
-      <View style={{ flex: 3, paddingTop: 20, backgroundColor: '#fff' }}>
+      <TouchableOpacity
+        onPress={() => {
+          ToastAndroid.show("Refreshing !", ToastAndroid.SHORT);
+          fetchUserInfo();
+        }}
+        style={{
+          position: "absolute",
+          zIndex: 1000,
+          top,
+          right: 0,
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+        }}
+      >
+        <Icon
+          name="refresh-cw"
+          type="feather"
+          size={32}
+          style={{
+            height: 40,
+            width: 40,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        />
+      </TouchableOpacity>
+      <View style={{ flex: 3, paddingTop: 20, backgroundColor: "#fff" }}>
         <FlatList
           data={list}
           renderItem={({ item }) => <ListItemHome item={item} />}
@@ -102,9 +183,8 @@ const HomeScreen = () => {
         >
           <Text
             style={{
-              backgroundColor: user_info?.balance >= 0
-                ? "#rgb(42,177,166)"
-                : "#F75428",
+              backgroundColor:
+                user_info?.balance >= 0 ? "#rgb(42,177,166)" : "#F75428",
               paddingVertical: 15,
               textAlign: "center",
               width: "80%",

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -24,6 +24,39 @@ const PaymentScreen = () => {
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
+
+  const handlePaymentPP = async () => {
+    if (driver_info.status === "Inactive")
+      return alert(
+        "Driver Inactive. Contact system administrator to activate your account."
+      );
+    if (payment < 500)
+      return alert("Online Payments of less than 500 are not allowed.");
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/api/phonepe/createPPURL`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: payment,
+          token,
+        }),
+      });
+      const json = await response.json();
+      if (response.status !== 200) {
+        return alert(json?.message);
+      }
+      const pp_url = json.pp_url;
+      setLoading(false);
+      Linking.openURL(pp_url)
+    } catch (error) {
+      console.log(error);
+    }
+    // navigation.navigate("HistoryScreen");
+  };
 
   const handlePaymentQr = async () => {
     if (driver_info.status === "Inactive")
@@ -200,7 +233,7 @@ const PaymentScreen = () => {
         >
           <TouchableOpacity
             style={{ width: "100%", alignItems: "center" }}
-            onPress={handlePaymentQr}
+            onPress={handlePaymentPP}
           >
             <Text
               style={{

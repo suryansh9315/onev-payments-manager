@@ -22,17 +22,18 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import XLSX from "xlsx";
+import DriverListItem from "../components/DriverListItem";
 
 console.log(API_URL?.substring(0, 0));
 
 const DriversScreen = () => {
-  const isFocused = useIsFocused();
   const [drivers, setDrivers] = useState([]);
   const [filteredDrivers, setFilteredDrivers] = useState([]);
   const [token, setToken] = useRecoilState(sessionToken);
   const [isAdmin, setIsAdmin] = useRecoilState(admin);
   const [userr, setUser] = useRecoilState(user);
   const [phone, setPhone] = useRecoilState(number);
+  const isFocused = useIsFocused();
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -247,13 +248,7 @@ const DriversScreen = () => {
           data={filteredDrivers}
           renderItem={({ item }) => (
             <>
-              <DriverAccordion
-                setLoading={setLoading}
-                driver={item}
-                logout={logout}
-                setReload={setReload}
-                reload={reload}
-              />
+              <DriverListItem item={item} logout={logout} />
             </>
           )}
           keyExtractor={(item) => item.dNumber}

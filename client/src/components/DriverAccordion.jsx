@@ -10,7 +10,7 @@ console.log(API_URL?.substring(0, 0));
 
 const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
   const [expanded, setExpanded] = useState(false);
-  const [newRent, setNewRent] = useState(0)
+  const [newRent, setNewRent] = useState(0);
   const token = useRecoilValue(sessionToken);
   const [cash, setCash] = useState("");
   const docsRef = useRef();
@@ -45,7 +45,7 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handlePaymentUpdate = async () => {
     if (driver.status === "Inactive") return alert("Driver Inactive.");
@@ -289,6 +289,46 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             }}
           >
             <Text style={{ fontSize: 10, color: "gray", marginBottom: 2 }}>
+              Client Name
+            </Text>
+            <Text style={{ fontSize: 18 }}>{driver?.client}</Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: "#f0f0f0",
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              borderRadius: 5,
+              width: 140,
+              height: 70,
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 10, color: "gray", marginBottom: 2 }}>
+              Hub Location
+            </Text>
+            <Text style={{ fontSize: 18 }}>{driver?.hub}</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#f0f0f0",
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              borderRadius: 5,
+              width: 140,
+              height: 70,
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 10, color: "gray", marginBottom: 2 }}>
               Admin Name
             </Text>
             <Text style={{ fontSize: 18 }}>{driver?.admin_name}</Text>
@@ -305,11 +345,9 @@ const DriverAccordion = ({ driver, logout, setReload, reload, setLoading }) => {
             }}
           >
             <Text style={{ fontSize: 10, color: "gray", marginBottom: 2 }}>
-              Admin Number
+              Advance Payment
             </Text>
-            <Text style={{ fontSize: 18 }}>
-              {driver?.admin_number.split(" ")[1]}
-            </Text>
+            <Text style={{ fontSize: 18 }}>{driver?.advance}</Text>
           </View>
         </View>
         <Animated.View

@@ -113,11 +113,11 @@ const AllHistory = () => {
   const handlePress = (filter) => {
     if (filter === "Unverified") {
       setFilteredOrders(
-        orders.filter((order) => order?.status === "created")
+        orders.filter((order) => order?.status !== "success")
       );
     } else if (filter === "Verified") {
       setFilteredOrders(
-        orders.filter((order) => order?.status === "Paid")
+        orders.filter((order) => order?.status === "success")
       );
     } else {
       setFilteredOrders(orders);
@@ -308,13 +308,13 @@ const AllHistory = () => {
                   alignItems: "center",
                   justifyContent: "space-between",
                 }}
-                onPress={() => {
-                  if (item.type === "QR_Online") {
-                    navigation.navigate("SinglePaymentAll", {
-                      paymentDetails: item,
-                    });
-                  }
-                }}
+                // onPress={() => {
+                //   if (item.type === "QR_Online") {
+                //     navigation.navigate("SinglePaymentAll", {
+                //       paymentDetails: item,
+                //     });
+                //   }
+                // }}
               >
                 <View style={{ gap: 5 }}>
                   <View
@@ -330,7 +330,7 @@ const AllHistory = () => {
                         width: 10,
                         borderRadius: 5,
                         backgroundColor:
-                          item.status === "Paid" ? "#26ff00" : "#ff3030",
+                          item.status === "success" ? "#26ff00" : "#ff3030",
                       }}
                     />
                     <Text style={{ fontSize: 18, fontWeight: "500" }}>

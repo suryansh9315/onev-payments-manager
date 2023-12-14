@@ -1,9 +1,10 @@
 import AllHistory from '../screens/AllHistory'
 import CreateDriver from '../screens/CreateDriver'
 import DriversScreen from '../screens/DriversScreen'
-import SinglePayment from '../screens/SinglePayment'
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerAdmin from "../components/CustomDrawerAdmin";
+import SingleDriver from "../components/SingleDriver";
+import AdminAnalytics from '../components/AdminAnalytics';
 
 const Drawer = createDrawerNavigator();
 
@@ -18,7 +19,8 @@ const BottomNavigator = () => {
         <Drawer.Screen name="Drivers" component={DriversScreen} />
         <Drawer.Screen name="CreateDriver" component={CreateDriver} />
         <Drawer.Screen name="AllHistory" component={AllHistory} />
-        <Drawer.Screen name="SinglePaymentAll" component={SinglePayment} />
+        <Drawer.Screen name="SingleDriver" component={SingleDriver} />
+        <Drawer.Screen name="Analytics" component={AdminAnalytics} />
       </Drawer.Navigator>
   );
 };

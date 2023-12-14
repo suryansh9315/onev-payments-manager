@@ -184,7 +184,7 @@ const HistoryScreen = () => {
                         width: 10,
                         borderRadius: 5,
                         backgroundColor:
-                          item.status === "Paid" ? "#26ff00" : "#ff3030",
+                          item.status === "success" ? "#26ff00" : "#ff3030",
                       }}
                     />
                     <Text style={{ fontSize: 18, fontWeight: "500" }}>

@@ -43,6 +43,9 @@ const CreateDriver = () => {
   const [accountNumber, setAccountNumber] = useState("");
   const [accountIFSC, setAccountIFSC] = useState("");
   const [dNumber, setDNumber] = useState("");
+  const [dHub, setDHub] = useState("");
+  const [dClient, setDClient] = useState("");
+  const [dAdvance, setDAdvance] = useState("");
   const [dEmail, setDEmail] = useState("");
   const [vNumber, setVNumber] = useState("");
   const [vModel, setVModel] = useState("");
@@ -127,6 +130,15 @@ const CreateDriver = () => {
     if (!dEmail) {
       return alert("Please Enter Driver Email");
     }
+    if (!dClient) {
+      return alert("Please Enter Client Name");
+    }
+    if (!dHub) {
+      return alert("Please Enter Hub Location");
+    }
+    if (!dAdvance) {
+      return alert("Please Enter Advance Payment");
+    }
     if (!accountNumber) {
       return alert("Please Enter Driver Account Number");
     }
@@ -195,6 +207,9 @@ const CreateDriver = () => {
         setName("");
         setDNumber("");
         setDEmail("");
+        setDAdvance("")
+        setDClient("")
+        setDHub("")
         setVModel("");
         setVNumber("");
         setRent("");
@@ -218,6 +233,9 @@ const CreateDriver = () => {
         setName("");
         setDNumber("");
         setDEmail("");
+        setDAdvance("")
+        setDClient("")
+        setDHub("")
         setVModel("");
         setVNumber("");
         setRent("");
@@ -265,6 +283,9 @@ const CreateDriver = () => {
         insurance: { url: insuranceURL, type: vInsurance.type },
         dNumber: "+91 " + dNumber,
         dEmail,
+        advance: dAdvance,
+        client: dClient,
+        hub: dHub,
         vNumber: vNumber.toUpperCase(),
         vModel,
         rent: +rent,
@@ -303,6 +324,9 @@ const CreateDriver = () => {
       setName("");
       setDNumber("");
       setDEmail("");
+      setDAdvance("")
+      setDClient("")
+      setDHub("")
       setVModel("");
       setVNumber("");
       setRent("");
@@ -464,6 +488,63 @@ const CreateDriver = () => {
                 placeholder="test@gmail.com"
                 value={dEmail}
                 onChangeText={(e) => setDEmail(e)}
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Hub Location
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="Mayur Vihar"
+                value={dHub}
+                onChangeText={(e) => setDHub(e)}
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Client Name
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="Parth Yadav"
+                value={dClient}
+                onChangeText={(e) => setDClient(e)}
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
+                Advance Payment
+              </Text>
+              <TextInput
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 5,
+                  backgroundColor: "#F9F9F8",
+                  fontSize: 14,
+                  elevation: 1,
+                }}
+                placeholderTextColor={"#5f5f5f"}
+                placeholder="10000"
+                value={dAdvance}
+                onChangeText={(e) => setDAdvance(e)}
               />
             </View>
             <Text style={{ fontSize: 26, marginTop: 20 }}>Account Details</Text>

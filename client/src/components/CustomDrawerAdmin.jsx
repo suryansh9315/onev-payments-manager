@@ -34,6 +34,13 @@ const items = [
     color: "#FE7896",
     type: "octicons",
   },
+  {
+    icon: "analytics",
+    label: "Analytics",
+    screen: "Analytics",
+    color: "#d6ad00",
+    type: "ionicons",
+  },
 ];
 
 const CustomDrawerAdmin = (props) => {

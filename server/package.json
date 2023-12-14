@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "api": "^6.1.1",
+    "base64-js": "^1.5.1",
+    "btoa-lite": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "expo-server-sdk": "^3.7.0",

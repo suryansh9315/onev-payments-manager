@@ -2,6 +2,7 @@
   "name": "client",
   "version": "1.0.0",
   "scripts": {
+    "eas-build-pre-install": "npm config set legacy-peer-deps true",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -29,7 +30,7 @@
     "firebase": "^10.0.0",
     "lottie-react-native": "5.1.4",
     "react": "18.2.0",
-    "react-native": "0.71.8",
+    "react-native": "0.71.14",
     "react-native-confirmation-code-field": "^7.3.1",
     "react-native-dotenv": "^3.4.9",
     "react-native-dropdown-picker": "^5.4.6",

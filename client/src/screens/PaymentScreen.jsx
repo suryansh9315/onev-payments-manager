@@ -87,6 +87,7 @@ const PaymentScreen = () => {
         }),
       });
       const json = await response.json();
+      console.log(json)
       if (response.status !== 200) {
         return alert(json?.message);
       }
@@ -124,6 +125,7 @@ const PaymentScreen = () => {
             }
           );
           const jsonV = await responseV.json();
+          console.log(jsonV)
           if (response.status !== 200) {
             return alert(jsonV?.message);
           }
@@ -142,10 +144,12 @@ const PaymentScreen = () => {
           navigation.navigate("HomeDriver");
         })
         .catch((error) => {
+          console.log(error)
           setLoading(false);
           alert("Something went wrong");
         });
     } catch (error) {
+      console.log(error)
       setLoading(false);
       alert("Something went wrong");
     }
@@ -233,7 +237,7 @@ const PaymentScreen = () => {
         >
           <TouchableOpacity
             style={{ width: "100%", alignItems: "center" }}
-            onPress={handlePaymentPP}
+            onPress={handlePayment}
           >
             <Text
               style={{

@@ -51,6 +51,11 @@ const HomeScreen = () => {
       index: 3,
       image_comp: require("../../assets/text_files.png"),
     },
+    {
+      ...user_info,
+      index: 4,
+      image_comp: require("../../assets/Male_avatar.png"),
+    }
   ];
   const scrollX = useRef(new Animated.Value(0)).current;
   const listRef = useRef();
@@ -151,7 +156,7 @@ const HomeScreen = () => {
       <View style={{ flex: 3, paddingTop: 20, backgroundColor: "#fff" }}>
         <FlatList
           data={list}
-          renderItem={({ item }) => <ListItemHome item={item} />}
+          renderItem={({ item }) => <ListItemHome item={item} logout={logout} />}
           keyExtractor={(item) => item.index}
           horizontal
           showsHorizontalScrollIndicator={false}

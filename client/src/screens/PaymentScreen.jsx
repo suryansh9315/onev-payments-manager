@@ -71,8 +71,8 @@ const PaymentScreen = () => {
   };
 
   const handlePayment = async () => {
-    if (payment < 500)
-      return alert("Online Payments of less than 500 are not allowed.");
+    if (payment < 100)
+      return alert("Online Payments of less than 100 are not allowed.");
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/api/orders/createOrder`, {
@@ -97,7 +97,7 @@ const PaymentScreen = () => {
         currency: "INR",
         key: RAZORPAY_KEY_ID,
         amount: payment,
-        name: "Paycol Corp",
+        name: "Fleet Ops",
         order_id,
         prefill: {
           email: driver_info?.dEmail,

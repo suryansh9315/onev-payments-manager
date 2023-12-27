@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fleet Ops",
     "slug": "onev-fleet-ops",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "orientation": "portrait",
     "icon": "./assets/paycol_3.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.onev.fleetops",
-      "versionCode": 11,
+      "versionCode": 12,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -51,6 +51,12 @@
       }
     },
     "owner": "devlopergod",
-    "scheme": "fleetops"
+    "scheme": "fleetops",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/eb20163c-e6a9-47b7-b651-cb301a5bc2ef"
+    }
   }
 }

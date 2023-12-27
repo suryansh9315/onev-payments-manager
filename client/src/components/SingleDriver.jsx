@@ -118,9 +118,9 @@ const SingleDriver = ({ route, navigation }) => {
       setCashError("Driver Inactive.");
       return;
     }
-    if (cash < 500) {
+    if (cash < 100) {
       setCashErrorStatus(true);
-      setCashError("Cash Deposits of less than 500 are not allowed.");
+      setCashError("Cash Deposits of less than 100 are not allowed.");
       return;
     }
     setLoading(true);

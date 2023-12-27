@@ -6,12 +6,14 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import DriverDoc from "./DriverDoc";
+import DriverAttendanceCalendar from "./DriverAttendanceCalendar";
 
-const ListItemHome = ({ item }) => {
+const ListItemHome = ({ item, logout }) => {
   const { width, height } = useWindowDimensions();
   const index = item.index;
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   switch (index) {
     case 0:
@@ -338,10 +340,34 @@ const ListItemHome = ({ item }) => {
                     fontWeight: "600",
                   }}
                 >
-                  OWNER NAME
+                  HUB LOCATION
                 </Text>
                 <Text style={{ fontSize: 15, fontWeight: "300" }}>
-                  {item?.name}
+                  {item?.hub}
+                </Text>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
+                >
+                  CLIENT NAME
+                </Text>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
+                  {item?.client}
                 </Text>
               </View>
             </View>
@@ -468,6 +494,30 @@ const ListItemHome = ({ item }) => {
                   {item?.balance >= 0 ? "Paid" : "Not Paid"}
                 </Text>
               </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  paddingVertical: 15,
+                  paddingHorizontal: 20,
+                  width: "90%",
+                  backgroundColor: "#fff",
+                  elevation: 3,
+                  gap: 2,
+                  borderRadius: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
+                >
+                  ADVANCE PAYMENT
+                </Text>
+                <Text style={{ fontSize: 15, fontWeight: "300" }}>
+                  &#8377; {item?.advance}
+                </Text>
+              </View>
             </View>
           </ScrollView>
         </View>
@@ -500,6 +550,42 @@ const ListItemHome = ({ item }) => {
           </View>
           <ScrollView style={{ marginVertical: 20 }}>
             <DriverDoc item={item} />
+          </ScrollView>
+        </View>
+      );
+
+    case 4:
+      return (
+        <View
+          style={{
+            width,
+            alignItems: "center",
+            backgroundColor: "#fff",
+          }}
+        >
+          <View
+            style={{
+              height: 250,
+              width: 250,
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Image
+              source={item.image_comp}
+              style={{ width: 250, height: 200, resizeMode: "contain" }}
+            />
+          </View>
+          <View>
+            <Text style={styles.title}>Attendance</Text>
+          </View>
+          <ScrollView style={{ marginVertical: 20 }}>
+            <DriverAttendanceCalendar
+              driver={item}
+              logout={logout}
+              value={currentDate}
+              onChange={setCurrentDate}
+            />
           </ScrollView>
         </View>
       );

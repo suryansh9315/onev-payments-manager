@@ -32,6 +32,18 @@ const data = [
   { key: "Tata Ace Ev 4W", value: "Tata Ace Ev 4W" },
   { key: "Altigreen Ev 3W", value: "Altigreen Ev 3W" },
 ];
+const clients = [
+  { key: "Porter", value: "Porter" },
+  { key: "DHL", value: "DHL" },
+  { key: "Maersk", value: "Maersk" },
+];
+const hubs = [
+  { key: "Home", value: "Home" },
+  { key: "Mayur Vihar", value: "Mayur Vihar" },
+  { key: "Usmanpur", value: "Usmanpur" },
+  { key: "Okhla", value: "Okhla" },
+  { key: "Chandigarh", value: "Chandigarh" },
+];
 
 const CreateDriver = () => {
   const [loading, setLoading] = useState(false);
@@ -207,9 +219,9 @@ const CreateDriver = () => {
         setName("");
         setDNumber("");
         setDEmail("");
-        setDAdvance("")
-        setDClient("")
-        setDHub("")
+        setDAdvance("");
+        setDClient("");
+        setDHub("");
         setVModel("");
         setVNumber("");
         setRent("");
@@ -233,9 +245,9 @@ const CreateDriver = () => {
         setName("");
         setDNumber("");
         setDEmail("");
-        setDAdvance("")
-        setDClient("")
-        setDHub("")
+        setDAdvance("");
+        setDClient("");
+        setDHub("");
         setVModel("");
         setVNumber("");
         setRent("");
@@ -324,9 +336,9 @@ const CreateDriver = () => {
       setName("");
       setDNumber("");
       setDEmail("");
-      setDAdvance("")
-      setDClient("")
-      setDHub("")
+      setDAdvance("");
+      setDClient("");
+      setDHub("");
       setVModel("");
       setVNumber("");
       setRent("");
@@ -494,38 +506,48 @@ const CreateDriver = () => {
               <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
                 Hub Location
               </Text>
-              <TextInput
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
+              <SelectList
+                setSelected={(val) => setDHub(val)}
+                data={hubs}
+                save="value"
+                boxStyles={{
                   borderRadius: 5,
                   backgroundColor: "#F9F9F8",
-                  fontSize: 14,
+                  borderWidth: 0,
                   elevation: 1,
                 }}
-                placeholderTextColor={"#5f5f5f"}
-                placeholder="Mayur Vihar"
-                value={dHub}
-                onChangeText={(e) => setDHub(e)}
+                inputStyles={{ fontSize: 14 }}
+                search={false}
+                defaultOption={{ key: "Home", value: "Home" }}
+                dropdownStyles={{
+                  backgroundColor: "#F9F9F8",
+                  borderWidth: 0,
+                  elevation: 1,
+                }}
               />
             </View>
             <View>
               <Text style={{ marginBottom: 5, fontSize: 14, color: "#5f5f5f" }}>
                 Client Name
               </Text>
-              <TextInput
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
+              <SelectList
+                setSelected={(val) => setDClient(val)}
+                data={clients}
+                save="value"
+                boxStyles={{
                   borderRadius: 5,
                   backgroundColor: "#F9F9F8",
-                  fontSize: 14,
+                  borderWidth: 0,
                   elevation: 1,
                 }}
-                placeholderTextColor={"#5f5f5f"}
-                placeholder="Parth Yadav"
-                value={dClient}
-                onChangeText={(e) => setDClient(e)}
+                inputStyles={{ fontSize: 14 }}
+                search={false}
+                defaultOption={{ key: "Porter", value: "Porter" }}
+                dropdownStyles={{
+                  backgroundColor: "#F9F9F8",
+                  borderWidth: 0,
+                  elevation: 1,
+                }}
               />
             </View>
             <View>

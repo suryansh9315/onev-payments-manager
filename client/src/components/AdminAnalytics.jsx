@@ -76,31 +76,35 @@ const AdminAnalytics = () => {
   };
 
   const downloadFinancialReport = async () => {
-    if (compareAsc(endDate, startDate) < 1) {
+    if (compareAsc(endDate, startDate) < 0) {
       alert("Choose correct start and end date.");
       return;
     }
     try {
       const days = eachDayOfInterval({ start: startDate, end: endDate });
       const temp_row = [];
-      for (const driver of drivers) {
-        const temp_obj = {};
-        temp_obj["driver_name"] = driver.name;
-        temp_obj["driver_number"] = driver.dNumber;
-        for (const date of days) {
+      for (const date of days) {
+        for (const driver of drivers) {
+          const temp_obj = {};
           const date_string =
             date.getDate() +
             "-" +
             (date.getMonth() + 1) +
             "-" +
             date.getFullYear();
-          const financial_string = await getFinance(
-            date_string,
-            driver._id
-          );
-          temp_obj[date_string] = financial_string;
+          temp_obj["Date"] = date_string;
+          temp_obj["Driver Name"] = driver.name;
+          temp_obj["Driver Number"] = driver.dNumber;
+          temp_obj["Vehicle Number"] = driver.vNumber;
+          temp_obj["Hub Location"] = driver.hub;
+          temp_obj["Vehicle Rent"] = driver.rent;
+          const financial_string = await getFinance(date_string, driver._id);
+          temp_obj["Total Collection"] = financial_string.total;
+          temp_obj["Cash Collection"] = financial_string.cash;
+          temp_obj["Online Collection"] = financial_string.online;
+          temp_obj["Balance"] = driver.balance;
+          temp_row.push(temp_obj);
         }
-        temp_row.push(temp_obj);
       }
       const ws = XLSX.utils.json_to_sheet(temp_row);
       const wb = XLSX.utils.book_new();

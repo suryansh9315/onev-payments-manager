@@ -45,6 +45,10 @@ const SingleDriver = ({ route, navigation }) => {
   const [rentVisible, setRentVisible] = useState(false);
   const [rent, setRent] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [wallet, setWallet] = useState(0);
+  const [walletVisible, setWalletVisible] = useState(false);
+  const [walletError, setWalletError] = useState("");
+  const [walletErrorStatus, setWalletErrorStatus] = useState(false);
 
   const handleDriverStatus = async () => {
     setLoading(true);
@@ -157,6 +161,54 @@ const SingleDriver = ({ route, navigation }) => {
       setCash(0);
       setCashError("");
       setCashErrorStatus(false);
+    }
+  };
+
+  const handleWalletUpdate = async () => {
+    if (driver.status === "Inactive") {
+      setWalletErrorStatus(true);
+      setWalletError("Driver Inactive.");
+      return;
+    }
+    if (wallet < 100) {
+      setWalletErrorStatus(true);
+      setWalletError("Wallet Deposits of less than 100 are not allowed.");
+      return;
+    }
+    setLoading(true);
+    setWalletErrorStatus(false);
+    try {
+      const response = await fetch(`${API_URL}/api/orders/createWalletOrder`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          driver_id: driver._id,
+          amount: wallet,
+        }),
+      });
+      const json = await response.json();
+      if (response.status === 200) {
+        driver.balance += cash;
+        driver.Paid += cash;
+      }
+      alert(`${json.message}`);
+      if (response.status === 400) {
+        logout();
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong...");
+    } finally {
+      setLoading(false);
+      setWalletVisible(!walletVisible);
+      setWallet(0);
+      setWalletError("");
+      setWalletErrorStatus(false);
     }
   };
 
@@ -801,6 +853,15 @@ const SingleDriver = ({ route, navigation }) => {
         color="#005EFF"
       >
         <SpeedDial.Action
+          icon={{ name: "wallet", type: 'entypo', color: "#fff" }}
+          title="Add Wallet"
+          onPress={() => {
+            setOpen(false);
+            setWalletVisible(true);
+          }}
+          color="#005EFF"
+        />
+        <SpeedDial.Action
           icon={{ name: "add", color: "#fff" }}
           title="Add Cash"
           onPress={() => {
@@ -929,6 +990,60 @@ const SingleDriver = ({ route, navigation }) => {
                 }}
               >
                 Update Rent
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Dialog>
+      <Dialog
+        isVisible={walletVisible}
+        onBackdropPress={() => {
+          setWallet(0);
+          setWalletVisible(!walletVisible);
+        }}
+      >
+        <View style={{ backgroundColor: "#fff", gap: 15 }}>
+          <Text style={{ fontSize: 18, fontWeight: "400" }}>Add Wallet</Text>
+          <TextInput
+            style={{
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              borderRadius: 5,
+              backgroundColor: "#f6f6f6",
+              fontSize: 14,
+              elevation: 1,
+            }}
+            placeholderTextColor={"#5f5f5f"}
+            value={wallet}
+            onChangeText={(e) => setWallet(+e)}
+            placeholder="Type Amount to Add"
+            keyboardType="number-pad"
+          />
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#005EFF",
+                borderRadius: 5,
+                width: "50%",
+              }}
+              onPress={handleWalletUpdate}
+            >
+              <Text
+                style={{
+                  backgroundColor: "#005EFF",
+                  color: "#fff",
+                  textAlign: "center",
+                  paddingVertical: 12,
+                  fontSize: 12,
+                  borderRadius: 5,
+                }}
+              >
+                Add Wallet
               </Text>
             </TouchableOpacity>
           </View>

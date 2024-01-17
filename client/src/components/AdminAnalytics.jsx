@@ -102,6 +102,7 @@ const AdminAnalytics = () => {
           temp_obj["Total Collection"] = financial_string.total;
           temp_obj["Cash Collection"] = financial_string.cash;
           temp_obj["Online Collection"] = financial_string.online;
+          temp_obj["Wallet Collection"] = financial_string.wallet;
           temp_obj["Balance"] = driver.balance;
           temp_row.push(temp_obj);
         }

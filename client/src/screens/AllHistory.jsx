@@ -112,13 +112,9 @@ const AllHistory = () => {
 
   const handlePress = (filter) => {
     if (filter === "Unverified") {
-      setFilteredOrders(
-        orders.filter((order) => order?.status !== "success")
-      );
+      setFilteredOrders(orders.filter((order) => order?.status !== "success"));
     } else if (filter === "Verified") {
-      setFilteredOrders(
-        orders.filter((order) => order?.status === "success")
-      );
+      setFilteredOrders(orders.filter((order) => order?.status === "success"));
     } else {
       setFilteredOrders(orders);
     }
@@ -128,7 +124,7 @@ const AllHistory = () => {
   useEffect(() => {
     if (isFocused) {
       fetchData();
-      setFiltertext("All")
+      setFiltertext("All");
     }
   }, [isFocused]);
 
@@ -365,10 +361,14 @@ const AllHistory = () => {
                   >
                     &#8377;{item?.amount / 100}
                   </Text>
-                  {item?.type === "Cash" ? (
+                  {item?.type === "Cash" && (
                     <Ionicons name="cash-outline" size={18} color="black" />
-                  ) : (
+                  )}
+                  {item?.type === "Online" && (
                     <AntDesign name="creditcard" size={16} color="black" />
+                  )}
+                  {item?.type === "Wallet" && (
+                    <Ionicons name="wallet" size={18} color="black" />
                   )}
                 </View>
               </TouchableOpacity>
